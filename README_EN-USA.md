@@ -19,24 +19,44 @@ To develop an educational application that makes learning more interactive and e
 ## 📁 Initial Folder Structure
 
 ```markdown
-dioraedu/
-├── backend/
-│   ├── controllers/
-│   │   └── alunoController.js
-│   ├── routes/
-│   │   └── alunoRoutes.js
-│   ├── models/
-│   │   └── aluno.js
-│   ├── app.js
-│   └── package.json
-│
-└── frontend/
-    ├── pages/
-    │   ├── index.js
-    │   └── alunos.js
-    ├── components/
-    │   └── AlunoList.js
-    └── package.json
+/dioraedu
+├── /node_modules
+├── /public
+│   └── /assets              # Imagens, ícones, etc.
+├── /src
+│   ├── /app (ou /pages)     # Rotas da aplicação (usar /pages se não usar App Router)
+│   │   ├── /api
+│   │   │   ├── /auth        # Login, logout, registro
+│   │   │   ├── /usuarios    # CRUD de usuários
+│   │   │   ├── /cursos      # CRUD de cursos
+│   │   │   ├── /conteudos   # CRUD de conteúdos
+│   │   │   ├── /atividades  # CRUD de atividades
+│   │   │   ├── /matriculas  # Matrículas de alunos
+│   │   │   └── /feedbacks   # Envio e leitura de feedbacks
+│   │   ├── /login           # Tela de login
+│   │   ├── /dashboard       # Redireciona para a home do aluno, prof ou admin
+│   │   ├── /cursos          # Listagem geral dos cursos
+│   │   ├── /cursos/[id]     # Detalhes de curso (com conteúdos)
+│   │   ├── /conteudos/[id]  # Visualização de conteúdo (e tentativas/feedback)
+│   │   └── index.tsx        # Página inicial
+│   ├── /components
+│   │   ├── Layout.tsx       # Layout base (navbar, footer, etc.)
+│   │   ├── CursoCard.tsx    # Exibe um curso
+│   │   ├── ConteudoItem.tsx # Exibe conteúdo
+│   │   └── etc...
+│   ├── /lib
+│   │   ├── prisma.ts        # Instância compartilhada do Prisma Client
+│   │   └── auth.ts          # Funções de login/autenticação
+│   ├── /hooks               # Hooks customizados
+│   ├── /styles              # CSS/Tailwind ou arquivos SCSS
+│   └── /utils               # Funções utilitárias (validações, formatações, etc.)
+├── .env                     # Variáveis de ambiente (banco de dados, JWT, etc.)
+├── prisma
+│   └── schema.prisma        # Modelos do banco (equivale ao SQL)
+├── tsconfig.json
+├── package.json
+└── README.md
+
 ```
 
 ## 🧑‍💻 Team
