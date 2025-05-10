@@ -1,4 +1,4 @@
-# DioraEDU_OFICIAL
+# DioraEDU
 
 > Plataforma educacional gamificada para reforço de Português e Matemática, inspirada em Duolingo, Google Classroom e Microsoft Teams.
 

@@ -1,4 +1,4 @@
-# DioraEDU_OFFICIAL
+# DioraEDU
 
 > A gamified educational platform for reinforcing Portuguese and Math skills, inspired by Duolingo, Google Classroom, and Microsoft Teams.
 
