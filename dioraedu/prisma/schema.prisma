@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model USUARIO {
+  ID_usuario Int       @id @default(autoincrement())
+  nome       String
+  email      String    @unique
+  senha      String
+  tipo       TipoUsuario
+  matriculas MATRICULA[]
+  tentativas TENTATIVA[]
+  feedbacks  FEEDBACK[]
+}
+
+model CURSO {
+  ID_curso   Int         @id @default(autoincrement())
+  nome       String
+  descricao  String
+  matriculas MATRICULA[]
+  conteudos  CONTEUDO[]
+}
+
+model MATRICULA {
+  ID_usuario     Int
+  ID_curso       Int
+  data_matricula DateTime
+
+  usuario USUARIO @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
+  curso   CURSO   @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
+
+  @@id([ID_usuario, ID_curso])
+}
+
+model CONTEUDO {
+  ID_conteudo Int       @id @default(autoincrement())
+  ID_curso    Int
+  titulo      String
+  descricao   String
+  tipo        TipoConteudo
+
+  curso      CURSO     @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
+  atividades ATIVIDADE[]
+  tentativas TENTATIVA[]
+  feedbacks  FEEDBACK[]
+}
+
+model ATIVIDADE {
+  ID_atividade Int       @id @default(autoincrement())
+  ID_conteudo  Int
+  titulo       String
+  descricao    String
+  data_criacao DateTime
+
+  conteudo CONTEUDO @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+}
+
+model TENTATIVA {
+  ID_tentativa   Int       @id @default(autoincrement())
+  ID_usuario     Int
+  ID_conteudo    Int
+  pontuacao      Int
+  data_tentativa DateTime  @default(now())
+
+  usuario  USUARIO  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
+  conteudo CONTEUDO @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+}
+
+model FEEDBACK {
+  ID_feedback    Int       @id @default(autoincrement())
+  ID_usuario     Int
+  ID_conteudo    Int
+  comentario     String?
+  avaliacao      Int       @db.TinyInt
+  data_feedback  DateTime  @default(now())
+
+  usuario  USUARIO  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
+  conteudo CONTEUDO @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+}
+
+enum TipoUsuario {
+  Aluno
+  Professor
+  Admin
+}
+
+enum TipoConteudo {
+  Texto
+  Vídeo
+  Exercício
+}
