@@ -8,11 +8,7 @@ Desenvolver uma aplicação educacional que torne o aprendizado mais interativo 
 
 ## 📦 Tecnologias Utilizadas
 
-### Backend
-- Node.js + Express.js
-- MySQL
-
-### Frontend (planejado)
+### FrameWork
 - Next.js / React
 - Tailwind CSS
 
@@ -49,7 +45,7 @@ dioraedu/
 - **Thalys Vinícius** – Frontend
 - **Giselly Luiza** – Backend e Gestão
 - **Danilo da Silva** – Frontend e Design
-- **Reginaldo José** – Documentação e Testes
+- **Reginaldo José** – Documentação(a definir) e Testes
 - **Alisson Gustavo** – Design e Testes 
 
 ## 📌 Funcionalidades previstas
@@ -62,7 +58,7 @@ dioraedu/
 ## 🗂️ Como rodar o projeto localmente
 
 ```bash
-git clone https://github.com/seu-usuario/dioraedu.git
+git clone https://github.com/seu-usuario/DIORA_EDU_OFICIAL.git
 cd dioraedu/backend
 ````
 
