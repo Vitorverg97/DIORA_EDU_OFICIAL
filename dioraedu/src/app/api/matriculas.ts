@@ -13,6 +13,14 @@ export default async function handler(req:NextApiRequest, res: NextApiResponse) 
     }
 
     if (req.method === 'POST') {
-        
+        try {
+            const matricula = await prisma.mATRICULA.create({ data: req.body })
+            return res.status(201).json(matricula)
+        } catch (err) {
+            console.error(err)
+            return res.status(500).json({ error: 'Erro ao criar matrícula.' })
+        }
     }
+
+    return res.status(405).json({ error: 'Método não permitido.' })
 }
