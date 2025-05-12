@@ -1,4 +1,4 @@
-// pages/api/usuarios.ts
+// app/api/usuarios.ts
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
