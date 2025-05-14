@@ -84,8 +84,8 @@ model FEEDBACK {
 }
 
 enum TipoUsuario {
-  aluno
-  professor
+  Aluno
+  Professor
 }
 
 enum TipoConteudo {
