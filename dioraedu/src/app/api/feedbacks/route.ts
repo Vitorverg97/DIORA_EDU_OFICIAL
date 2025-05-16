@@ -1,26 +1,35 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { z } from 'zod'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    try {
-      const feedbacks = await prisma.fEEDBACK.findMany()
-      return res.status(200).json(feedbacks)
-    } catch (err) {
-      console.error(err)
-      return res.status(500).json({ error: 'Erro ao buscar feedbacks.' })
-    }
+const feedbackSchema = z.object({
+  ID_usuario: z.number().int().positive(),
+  ID_conteudo: z.number().int().positive(),
+  comentario: z.string().optional(),
+  avaliacao: z.number().int().min(1).max(5),
+})
+
+export async function GET() {
+  try {
+    const lista = await prisma.fEEDBACK.findMany()
+    return NextResponse.json(lista)
+  } catch (err) {
+    console.error('Erro ao buscar feedbacks:', err)
+    return NextResponse.json({ error: 'Erro ao buscar feedbacks' }, { status: 500 })
   }
+}
 
-  if (req.method === 'POST') {
-    try {
-      const feedback = await prisma.fEEDBACK.create({ data: req.body })
-      return res.status(201).json(feedback)
-    } catch (err) {
-      console.error(err)
-      return res.status(500).json({ error: 'Erro ao criar feedback.' })
-    }
+export async function POST(req: Request) {
+  const body = await req.json()
+  const parsed = feedbackSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
   }
-
-  return res.status(405).json({ error: 'Método não permitido.' })
+  try {
+    const f = await prisma.fEEDBACK.create({ data: parsed.data })
+    return NextResponse.json(f, { status: 201 })
+  } catch (err) {
+    console.error('Erro ao criar feedback:', err)
+    return NextResponse.json({ error: 'Erro ao criar feedback' }, { status: 500 })
+  }
 }
