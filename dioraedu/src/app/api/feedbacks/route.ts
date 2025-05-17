@@ -11,7 +11,7 @@ const feedbackSchema = z.object({
 
 export async function GET() {
   try {
-    const lista = await prisma.fEEDBACK.findMany()
+    const lista = await prisma.feedback.findMany()
     return NextResponse.json(lista)
   } catch (err) {
     console.error('Erro ao buscar feedbacks:', err)
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
   }
   try {
-    const f = await prisma.fEEDBACK.create({ data: parsed.data })
+    const f = await prisma.feedback.create({ data: parsed.data })
     return NextResponse.json(f, { status: 201 })
   } catch (err) {
     console.error('Erro ao criar feedback:', err)

@@ -7,7 +7,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const body = await req.json()
 
   try {
-    const atividadeAtualizada = await prisma.aTIVIDADE.update({
+    const atividadeAtualizada = await prisma.atividade.update({
       where: { ID_atividade: id },
       data: body,
     })
@@ -23,7 +23,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const id = Number(params.id)
 
   try {
-    await prisma.aTIVIDADE.delete({
+    await prisma.atividade.delete({
       where: { ID_atividade: id },
     })
     return NextResponse.json({ message: 'Atividade excluída com sucesso.' })

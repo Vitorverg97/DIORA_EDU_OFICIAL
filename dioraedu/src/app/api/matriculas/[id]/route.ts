@@ -7,7 +7,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const body = await req.json()
 
   try {
-    const matriculaAtualizada = await prisma.mATRICULA.update({
+    const matriculaAtualizada = await prisma.matricula.update({
       where: { ID_matricula: id },
       data: body,
     })
@@ -22,7 +22,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const id = Number(params.id)
 
   try {
-    await prisma.mATRICULA.delete({
+    await prisma.matricula.delete({
       where: { ID_matricula: id },
     })
     return NextResponse.json({ message: 'Matricula excluída com sucesso.' })

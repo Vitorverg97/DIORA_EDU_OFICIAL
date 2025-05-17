@@ -7,7 +7,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const body = await req.json()
 
   try {
-    const tentativaAtualizada = await prisma.tENTATIVA.update({
+    const tentativaAtualizada = await prisma.tentativa.update({
       where: { ID_tentativa: id },
       data: body,
     })
@@ -23,7 +23,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const id = Number(params.id)
 
   try {
-    await prisma.tENTATIVA.delete({
+    await prisma.tentativa.delete({
       where: { ID_tentativa: id },
     })
     return NextResponse.json({ message: 'tentativa excluída com sucesso.' })

@@ -11,7 +11,7 @@ const tentativaSchema = z.object({
 
 export async function GET() {
   try {
-    const lista = await prisma.tENTATIVA.findMany()
+    const lista = await prisma.tentativa.findMany()
     return NextResponse.json(lista)
   } catch (err) {
     console.error('Erro ao buscar tentativas:', err)
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
   }
   try {
-    const t = await prisma.tENTATIVA.create({ data: parsed.data })
+    const t = await prisma.tentativa.create({ data: parsed.data })
     return NextResponse.json(t, { status: 201 })
   } catch (err) {
     console.error('Erro ao criar tentativa:', err)

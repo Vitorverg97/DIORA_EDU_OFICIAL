@@ -8,7 +8,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const body = await req.json()
 
   try {
-    const feedbackAtualizado = await prisma.fEEDBACK.update({
+    const feedbackAtualizado = await prisma.feedback.update({
       where: { ID_feedback: id },
       data: body,
     })
@@ -23,7 +23,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const id = Number(params.id)
 
   try {
-    await prisma.fEEDBACK.delete({
+    await prisma.feedback.delete({
       where: { ID_feedback: id },
     })
     return NextResponse.json({ message: 'Feedback excluída com sucesso.' })

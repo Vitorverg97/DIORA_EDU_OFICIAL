@@ -28,7 +28,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       body.senha = await bcrypt.hash(body.senha, 10)
     }
 
-    const usuarioAtualizado = await prisma.uSUARIO.update({
+    const usuarioAtualizado = await prisma.usuario.update({
       where: { ID_usuario: Number(id) },
       data: body,
       select: {
@@ -49,7 +49,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 // DELETE
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
   try {
-    await prisma.uSUARIO.delete({
+    await prisma.usuario.delete({
       where: { ID_usuario: Number(params.id) },
     })
     return NextResponse.json({ message: 'Usuário deletado com sucesso' })

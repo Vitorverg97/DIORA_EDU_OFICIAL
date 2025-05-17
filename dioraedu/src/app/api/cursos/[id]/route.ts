@@ -17,7 +17,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 
   try {
-    const cursoAtualizado = await prisma.cURSO.update({
+    const cursoAtualizado = await prisma.curso.update({
       where: { ID_curso: id },
       data: result.data,
     })
@@ -32,7 +32,7 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
   const id = Number(params.id)
 
   try {
-    await prisma.cURSO.delete({
+    await prisma.curso.delete({
       where: { ID_curso: id },
     })
     return NextResponse.json({ message: 'Curso deletado com sucesso' }, { status: 200 })

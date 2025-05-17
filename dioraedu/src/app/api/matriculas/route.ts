@@ -10,7 +10,7 @@ const matriculaSchema = z.object({
 
 export async function GET() {
   try {
-    const lista = await prisma.mATRICULA.findMany()
+    const lista = await prisma.matricula.findMany()
     return NextResponse.json(lista)
   } catch (err) {
     console.error('Erro ao buscar matrículas:', err)
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
   }
   try {
-    const mat = await prisma.mATRICULA.create({ data: parsed.data })
+    const mat = await prisma.matricula.create({ data: parsed.data })
     return NextResponse.json(mat, { status: 201 })
   } catch (err) {
     console.error('Erro ao criar matrícula:', err)

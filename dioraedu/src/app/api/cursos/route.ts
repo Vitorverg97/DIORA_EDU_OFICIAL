@@ -9,7 +9,7 @@ const cursoSchema = z.object({
 
 export async function GET() {
   try {
-    const cursos = await prisma.cURSO.findMany({
+    const cursos = await prisma.curso.findMany({
       select: { ID_curso: true, nome: true, descricao: true },
     })
     return NextResponse.json(cursos)
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
   }
   try {
-    const curso = await prisma.cURSO.create({ data: parsed.data })
+    const curso = await prisma.curso.create({ data: parsed.data })
     return NextResponse.json(curso, { status: 201 })
   } catch (err) {
     console.error('Erro ao criar curso:', err)

@@ -11,7 +11,7 @@ const conteudoSchema = z.object({
 
 export async function GET() {
   try {
-    const lista = await prisma.cONTEUDO.findMany()
+    const lista = await prisma.conteudo.findMany()
     return NextResponse.json(lista)
   } catch (err) {
     console.error('Erro ao buscar conteúdos:', err)
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
   }
   try {
-    const cont = await prisma.cONTEUDO.create({ data: parsed.data })
+    const cont = await prisma.conteudo.create({ data: parsed.data })
     return NextResponse.json(cont, { status: 201 })
   } catch (err) {
     console.error('Erro ao criar conteúdo:', err)
