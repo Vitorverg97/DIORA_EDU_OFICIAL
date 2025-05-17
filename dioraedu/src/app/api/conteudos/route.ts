@@ -1,26 +1,35 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import prisma from "@/lib/prisma";
+import { NextResponse } from 'next/server'
+import prisma from '@/lib/prisma'
+import { z } from 'zod'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === 'GET') {
-        try {
-            const conteudos = await prisma.cONTEUDO.findMany()
-            return res.status(200).json(conteudos)
-        } catch (err) {
-            console.error(err)
-            return res.status(500).json({ error: 'Erro ao buscar conteúdos.' })
-        }
-    }
+const conteudoSchema = z.object({
+  ID_curso: z.number().int().positive(),
+  titulo: z.string().min(1),
+  descricao: z.string().min(1),
+  tipo: z.enum(['Texto', 'Vídeo', 'Exercício']),
+})
 
-    if (req.method === 'POST') {
-        try {
-            const conteudo = await prisma.cONTEUDO.create({ data: req.body })
-            return res.status(201).json(conteudo)
-        } catch (err) {
-            console.error(err)
-            return res.status(500).json({ error: 'Erro ao criar conteúdo.' })
-        }
-    }
+export async function GET() {
+  try {
+    const lista = await prisma.cONTEUDO.findMany()
+    return NextResponse.json(lista)
+  } catch (err) {
+    console.error('Erro ao buscar conteúdos:', err)
+    return NextResponse.json({ error: 'Erro ao buscar conteúdos' }, { status: 500 })
+  }
+}
 
-    return res.status(405).json({error: 'Método não permitido.'})
+export async function POST(req: Request) {
+  const body = await req.json()
+  const parsed = conteudoSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
+  }
+  try {
+    const cont = await prisma.cONTEUDO.create({ data: parsed.data })
+    return NextResponse.json(cont, { status: 201 })
+  } catch (err) {
+    console.error('Erro ao criar conteúdo:', err)
+    return NextResponse.json({ error: 'Erro ao criar conteúdo' }, { status: 500 })
+  }
 }

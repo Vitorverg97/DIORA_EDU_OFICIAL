@@ -6,7 +6,7 @@ CREATE TABLE USUARIO (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     senha VARCHAR(255) NOT NULL,
-    tipo ENUM('Aluno', 'Professor', 'Admin')NOT NULL
+    tipo ENUM('Aluno', 'Professor') NOT NULL
 );
 
 CREATE TABLE CURSO (
@@ -16,10 +16,10 @@ descricao TEXT NOT NULL
 );
 
 CREATE TABLE MATRICULA (
+    ID_matricula INT PRIMARY KEY AUTO_INCREMENT,
     ID_usuario INT,
     ID_curso INT,
     data_matricula DATE NOT NULL,
-    PRIMARY KEY (ID_usuario, ID_curso),
     FOREIGN KEY (ID_usuario) REFERENCES USUARIO(ID_usuario) ON DELETE CASCADE,
     FOREIGN KEY (ID_curso) REFERENCES CURSO(ID_curso) ON DELETE CASCADE
 );
