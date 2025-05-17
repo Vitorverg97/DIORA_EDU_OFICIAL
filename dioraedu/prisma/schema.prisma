@@ -27,6 +27,7 @@ model CURSO {
 }
 
 model MATRICULA {
+  ID_matricula   Int     @id @default(autoincrement())
   ID_usuario     Int
   ID_curso       Int
   data_matricula DateTime
@@ -34,7 +35,7 @@ model MATRICULA {
   usuario USUARIO @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
   curso   CURSO   @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
 
-  @@id([ID_usuario, ID_curso])
+  @@unique([ID_usuario, ID_curso])
 }
 
 model CONTEUDO {
