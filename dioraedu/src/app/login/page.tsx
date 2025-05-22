@@ -14,7 +14,7 @@ export default function Login() {
       {/* Conteúdo principal */}
       <div className="mt-16 text-center flex flex-col items-center gap-4">
         {/* Logo */}
-        <img src="/assets/icone-cerebro.svg" alt="Logo" className="w-24 h-24" /> 
+        <img src="/assets/icone-cerebro.svg" alt="Logo" className="w-30 h-30" /> 
 
         {/* Título */}
         <h1 className="text-2xl font-bold text-black">Que bom que você voltou!</h1>
@@ -35,9 +35,15 @@ export default function Login() {
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
           />
-          <button className="bg-[#4A4A4A] text-white px-6 py-2 rounded w-full hover:opacity-90">
-         Continuar
-            </button>
+          <button
+            onClick={() => {
+              window.location.href = "/inicial";
+            }}
+            className="bg-[#4A4A4A] text-white px-6 py-2 rounded w-full hover:opacity-90"
+          >
+            Continuar
+          </button>
+
 
             <div className="flex flex-col items-center gap-2 mt-2 w-full">
             <button
