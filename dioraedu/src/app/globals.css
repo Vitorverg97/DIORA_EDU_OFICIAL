@@ -24,3 +24,91 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.presentation-container {
+
+  background-color: #ffffff;
+
+  min-height: 100vh;
+
+  padding: 4rem 2rem;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+ 
+.presentation-content {
+
+  text-align: center;
+
+  max-width: 600px;
+
+  margin-bottom: 2rem;
+
+}
+ 
+.presentation-title {
+
+  color: #1a3a4f;
+
+  font-size: 3rem;
+
+  font-weight: bold;
+
+  margin-bottom: 1rem;
+
+}
+ 
+.presentation-description {
+
+  color: #1a3a4f;
+
+  font-size: 1.25rem;
+
+  margin-bottom: 2rem;
+
+}
+ 
+.presentation-button {
+
+  background-color: #8ed2eb;
+
+  color: #1a3a4f;
+
+  font-weight: 600;
+
+  padding: 0.75rem 1.5rem;
+
+  border-radius: 0.5rem;
+
+  text-decoration: none;
+
+  transition: background-color 0.3s ease;
+
+}
+ 
+.presentation-button:hover {
+
+  background-color: #7ac4dd;
+
+}
+ 
+.presentation-image {
+
+  width: 100%;
+
+  max-width: 800px;
+
+  border-radius: 1rem;
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+}
+
+ 
