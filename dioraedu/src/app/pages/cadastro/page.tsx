@@ -59,7 +59,7 @@ export default function Cadastro() {
           <button
             onClick={() => {
               alert("Cadastro concluído com sucesso!\nVerifique sua caixa de entrada para confirmar seu e-mail.");
-              window.location.href = "/inicial";
+              window.location.href = "/pages/home";
             }}
             className="bg-[#4A4A4A] text-white px-6 py-2 rounded w-full hover:opacity-90"
           >
