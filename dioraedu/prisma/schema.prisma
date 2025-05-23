@@ -7,71 +7,72 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model USUARIO {
+model usuario {
   ID_usuario Int       @id @default(autoincrement())
   nome       String
   email      String    @unique
   senha      String
   tipo       TipoUsuario
-  matriculas MATRICULA[]
-  tentativas TENTATIVA[]
-  feedbacks  FEEDBACK[]
+  matriculas matricula[]
+  tentativas tentativa[]
+  feedbacks  feedback[]
 }
 
-model CURSO {
+model curso {
   ID_curso   Int         @id @default(autoincrement())
   nome       String
   descricao  String
-  matriculas MATRICULA[]
-  conteudos  CONTEUDO[]
+  matriculas matricula[]
+  conteudos  conteudo[]
 }
 
-model MATRICULA {
+model matricula {
+  ID_matricula   Int     @id @default(autoincrement())
   ID_usuario     Int
   ID_curso       Int
   data_matricula DateTime
 
-  usuario USUARIO @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
-  curso   CURSO   @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
+  usuario usuario @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
+  curso   curso   @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
 
-  @@id([ID_usuario, ID_curso])
+  @@unique([ID_usuario, ID_curso])
 }
 
-model CONTEUDO {
+model conteudo {
   ID_conteudo Int       @id @default(autoincrement())
   ID_curso    Int
   titulo      String
   descricao   String
   tipo        TipoConteudo
 
-  curso      CURSO     @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
-  atividades ATIVIDADE[]
-  tentativas TENTATIVA[]
-  feedbacks  FEEDBACK[]
+  curso      curso     @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
+  atividades atividade[]
+  tentativas tentativa[]
+  feedbacks  feedback[]
 }
 
-model ATIVIDADE {
+model atividade {
   ID_atividade Int       @id @default(autoincrement())
   ID_conteudo  Int
   titulo       String
   descricao    String
   data_criacao DateTime
 
-  conteudo CONTEUDO @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+  conteudo conteudo @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
 }
 
-model TENTATIVA {
+model tentativa {
   ID_tentativa   Int       @id @default(autoincrement())
   ID_usuario     Int
   ID_conteudo    Int
   pontuacao      Int
   data_tentativa DateTime  @default(now())
 
-  usuario  USUARIO  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
-  conteudo CONTEUDO @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+  usuario  usuario  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
+  conteudo conteudo @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
 }
 
-model FEEDBACK {
+model feedback {
   ID_feedback    Int       @id @default(autoincrement())
   ID_usuario     Int
   ID_conteudo    Int
@@ -79,8 +80,8 @@ model FEEDBACK {
   avaliacao      Int       @db.TinyInt
   data_feedback  DateTime  @default(now())
 
-  usuario  USUARIO  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
-  conteudo CONTEUDO @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+  usuario  usuario  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
+  conteudo conteudo @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
 }
 
 enum TipoUsuario {

@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { email, senha } = result.data
 
   try {
-    const usuario = await prisma.uSUARIO.findUnique({
+    const usuario = await prisma.usuario.findUnique({
       where: { email },
     })
 

@@ -1,26 +1,35 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { z } from 'zod'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    try {
-      const cursos = await prisma.cURSO.findMany()
-      return res.status(200).json(cursos)
-    } catch (err) {
-      console.error(err)
-      return res.status(500).json({ error: 'Erro ao buscar cursos.' })
-    }
+const cursoSchema = z.object({
+  nome: z.string().min(1),
+  descricao: z.string().min(1),
+})
+
+export async function GET() {
+  try {
+    const cursos = await prisma.curso.findMany({
+      select: { ID_curso: true, nome: true, descricao: true },
+    })
+    return NextResponse.json(cursos)
+  } catch (err) {
+    console.error('Erro ao buscar cursos:', err)
+    return NextResponse.json({ error: 'Erro ao buscar cursos' }, { status: 500 })
   }
+}
 
-  if (req.method === 'POST') {
-    try {
-      const curso = await prisma.cURSO.create({ data: req.body })
-      return res.status(201).json(curso)
-    } catch (err) {
-      console.error(err)
-      return res.status(500).json({ error: 'Erro ao criar curso.' })
-    }
+export async function POST(req: Request) {
+  const body = await req.json()
+  const parsed = cursoSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
   }
-
-  return res.status(405).json({ error: 'Método não permitido.' })
+  try {
+    const curso = await prisma.curso.create({ data: parsed.data })
+    return NextResponse.json(curso, { status: 201 })
+  } catch (err) {
+    console.error('Erro ao criar curso:', err)
+    return NextResponse.json({ error: 'Erro ao criar curso' }, { status: 500 })
+  }
 }

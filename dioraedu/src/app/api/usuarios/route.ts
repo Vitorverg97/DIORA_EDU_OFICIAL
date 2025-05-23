@@ -14,7 +14,7 @@ const usuarioSchema = z.object({
 // GET /api/usuarios
 export async function GET() {
   try {
-    const usuarios = await prisma.uSUARIO.findMany({
+    const usuarios = await prisma.usuario.findMany({
       select: {
         ID_usuario: true,
         nome: true,
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   try {
     const senhaHash: string = await bcrypt.hash(senhaInput, 10) // adicionando tipagem explícita
 
-    const novoUsuario = await prisma.uSUARIO.create({
+    const novoUsuario = await prisma.usuario.create({
       data: { nome, email, senha: senhaHash, tipo },
       select: {
         ID_usuario: true,
