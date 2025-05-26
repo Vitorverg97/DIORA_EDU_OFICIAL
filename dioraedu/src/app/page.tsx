@@ -13,48 +13,37 @@ export default function TelaInicial() {
         <h1 className="text-2xl font-bold text-[#0A2E4B] ml-2">DioraEdu</h1>
       </header>
 
-      {/* Conteúdo principal centralizado */}
+      {/* Conteúdo central */}
       <main className="flex flex-1 items-center justify-center px-4">
-       <div className="relative w-full h-screen bg-white">
-        <img
-          src="/assets/icone-cerebro.svg"
-          alt="Logo DioraEdu"
-          className="
-            absolute
-            top-[160px]
-            left-[410px]
-            w-[200px]
-            h-[200px]
-            object-contain
-          "
-        />
-          <div className="relative w-full h-screen bg-[#BDE3FA]">
+        <div className="flex flex-col items-center justify-center gap-6 text-center">
+          
+          {/* Imagem central */}
+          <Image
+            src="/assets/icone-cerebro.svg"
+            alt="Logo central"
+            width={200}
+            height={200}
+            className="object-contain"
+          />
 
-            <p
-              className="
-                absolute
-                top-[140px] left-[320px]
-                text-[#0A2E4B]
-                text-[28px]
-                font-semibold
-                font-['Inter']
-                leading-snug
-              "
-            >
-              Acessando a educação com criatividade!
-            </p>
-            <div className="flex flex-col gap-3 w-60">
-              <Link href="/pages/cadastro">
-              <button className="bg-[#4A4A4A] text-white w-50 h-10 rounded-lg absolute left-170 top-73">
+          {/* Texto abaixo da imagem */}
+          <p className="text-[#0A2E4B] text-[28px] font-semibold font-['Inter'] leading-snug">
+            Acessando a educação com criatividade!
+          </p>
+
+          {/* Botões */}
+          <div className="flex flex-col gap-3 w-60">
+            <Link href="/pages/cadastro">
+              <button className="w-full bg-[#4A4A4A] text-white h-10 rounded-lg hover:opacity-90 transition-all">
                 Comece agora
               </button>
             </Link>
-              <Link href="/pages/login">
-              <button className="bg-[#4A4A4A] text-white w-50 h-10 rounded-lg absolute left-170 top-60">
+
+            <Link href="/pages/login">
+              <button className="w-full bg-[#4A4A4A] text-white h-10 rounded-lg hover:opacity-90 transition-all">
                 Já tenho uma conta
               </button>
             </Link>
-            </div>
           </div>
         </div>
       </main>
