@@ -2,6 +2,7 @@
 
 import { FaHome, FaUserAlt, FaHeart } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Link from "next/link";
 
 export default function Classes() {
   return (
@@ -26,31 +27,35 @@ export default function Classes() {
         {/* Seção de Classes */}
         <div className="flex-1">
           <h2 className="text-3xl font-bold mb-4">Classes</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-8">
             {/* Cartões de disciplinas */}
             <DisciplinaCard
-              cor="bg-[#92D050]"
+              imagemTopo="/assets/topo-matematica.png"
               titulo="Matemática"
               professor="Prof. Helena Martins"
               imagem="/assets/prof1.png"
+              link="/pages/materias/matematica"
             />
             <DisciplinaCard
-              cor="bg-[#D9006C]"
+              imagemTopo="/assets/topo-portugues.png"
               titulo="Português"
               professor="Prof. Ricardo Almeida"
               imagem="/assets/prof2.png"
+              link="/pages/materias/portugues"
             />
             <DisciplinaCard
-              cor="bg-[#00B050]"
+              imagemTopo="/assets/topo-geografia.png"
               titulo="Geografia"
-              professor="Prof. Cristiane Calado"
+              professor="Prof. Cristiane Caiado"
               imagem="/assets/prof3.png"
+              link="/pages/materias/geografia"
             />
             <DisciplinaCard
-              cor="bg-[#FFC000]"
+              imagemTopo="/assets/topo-historia.png"
               titulo="História"
               professor="Prof. Ademir Silva"
               imagem="/assets/prof4.png"
+              link="/pages/materias/Historia"
             />
           </div>
         </div>
@@ -76,38 +81,65 @@ export default function Classes() {
       </div>
 
       {/* Menu inferior */}
-     <footer className="bg-white py-3 flex justify-around items-center border-t">
-  <button
-    onClick={() => window.location.href = "/pages/home"}
-    className="hover:scale-120 transition-transform duration-200"
-  >
-    <FaHome className="text-2xl text-[#0A2E4B]" />
-  </button>
-  <button
-    onClick={() => window.location.href = "/pages/perfil"}
-    className="hover:scale-120 transition-transform duration-200"
-  >
-    <FaUserAlt className="text-2xl text-[#0A2E4B]" />
-  </button>
-  <FaHeart className="text-2xl text-[#0A2E4B]" />
-  <div className="flex gap-2">
-    <img src="/assets/google-play.png" alt="Google Play" className="h-8" />
-    <img src="/assets/app-store.png" alt="App Store" className="h-8" />
-  </div>
-</footer>
+      <footer className="bg-white py-3 flex justify-around items-center border-t">
+        <button
+          onClick={() => window.location.href = "/pages/home"}
+          className="hover:scale-110 transition-transform duration-200"
+        >
+          <FaHome className="text-2xl text-[#0A2E4B]" />
+        </button>
+        <button
+          onClick={() => window.location.href = "/pages/perfil"}
+          className="hover:scale-110 transition-transform duration-200"
+        >
+          <FaUserAlt className="text-2xl text-[#0A2E4B]" />
+        </button>
+        <FaHeart className="text-2xl text-[#0A2E4B]" />
+        <div className="flex gap-2">
+          <img src="/assets/google-play.png" alt="Google Play" className="h-8" />
+          <img src="/assets/app-store.png" alt="App Store" className="h-8" />
+        </div>
+      </footer>
     </div>
   );
 }
 
 // Componente para os cards de disciplina
-function DisciplinaCard({ cor, titulo, professor, imagem }: { cor: string, titulo: string, professor: string, imagem: string }) {
+function DisciplinaCard({
+  imagemTopo,
+  titulo,
+  professor,
+  imagem,
+  link,
+}: {
+  imagemTopo: string;
+  titulo: string;
+  professor: string;
+  imagem: string;
+  link: string;
+}) {
   return (
-    <div className={`p-4 rounded-xl shadow flex justify-between items-center ${cor}`}>
+    <Link href={link}>
+  <div className="w-full rounded-xl cursor-pointer transition-all duration-300">
+    {/* Topo com imagem de fundo */}
+    <div
+      className="h-20 bg-cover bg-center rounded-t-xl"
+      style={{ backgroundImage: `url(${imagemTopo})` }}
+    ></div>
+
+    {/* Parte inferior branca com sombra */}
+    <div className="bg-white px-3 py-6 flex justify-between items-center rounded-b-xl shadow-md hover:shadow-lg">
       <div>
-        <h4 className="text-xl font-bold text-white">{titulo}</h4>
-        <p className="text-white text-sm">{professor}</p>
+        <h4 className="text-base font-bold text-[#0A2E4B]">{titulo}</h4>
+        <p className="text-sm text-[#0A2E4B]">{professor}</p>
       </div>
-      <img src={imagem} alt={professor} className="h-12 w-12 rounded-full object-cover" />
+      <img
+        src={imagem}
+        alt={professor}
+        className="h-10 w-10 rounded-full object-cover border-2 border-white shadow"
+      />
     </div>
+  </div>
+</Link>
   );
 }
