@@ -1,7 +1,5 @@
 import React from "react";
 
-import Link from "next/link";
- 
 const colors = {
 
   background: "#FFFFFF", // branco
@@ -39,7 +37,7 @@ export default function LandingPage() {
 
         style={{
 
-          background: "#fff",
+          background: "/assets/fundo-login.png",
 
           borderRadius: 24,
 
@@ -55,6 +53,7 @@ export default function LandingPage() {
 
         }}
 >
+   
 <h1
 
           style={{
@@ -92,35 +91,37 @@ export default function LandingPage() {
           Aprenda, evolua e transforme seu futuro com o DioraEDU.
 </p>
 <div style={{ display: "flex", gap: 16, justifyContent: "center" }}>
-<Link href="/login">
 
+<a href="pages/login"
+  
+  
+                style={{
+  
+                  background: colors.primary,
+  
+                  color: colors.background,
+  
+                  padding: "12px 32px",
+  
+                  borderRadius: 8,
+  
+                  textDecoration: "none",
+  
+                  fontWeight: 600,
+  
+                  fontSize: "1rem",
+  
+                  transition: "background 0.2s",
+  
+                  border: `2px solid ${colors.primary}`,
+  
+                }}
+  >
+                Login
+  
+</a>
 
-              style={{
-
-                background: colors.primary,
-
-                color: colors.background,
-
-                padding: "12px 32px",
-
-                borderRadius: 8,
-
-                textDecoration: "none",
-
-                fontWeight: 600,
-
-                fontSize: "1rem",
-
-                transition: "background 0.2s",
-
-                border: `2px solid ${colors.primary}`,
-
-              }}
-
-              Login
-</Link>
-<Link href="/cadastro">
-<a
+<a href="pages/cadastro"
 
               style={{
 
@@ -144,10 +145,8 @@ export default function LandingPage() {
 
               }}
 >
-
               Cadastro
 </a>
-</Link>
 </div>
 </div>
 </div>
