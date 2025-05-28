@@ -10,8 +10,7 @@ export default function Login() {
   const [senha, setSenha] = useState('');
 
   return (
-    <div className="min-h-screen w-full bg-cover bg-center flex flex-col justify-between items-center" style={{ backgroundImage: "url('/assets/fundo-login.png')" }}>
-      
+        <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col justify-between">
       {/* Conteúdo principal */}
       <div className="mt-16 text-center flex flex-col items-center gap-4">
         {/* Logo */}

@@ -25,7 +25,7 @@ const NotFoundPage = () => {
           justify-content: center;
           min-height: 100vh;
           flex-direction: column;
-          background:rgb(224, 247, 250);
+          background:#BDE3FA;
           text-align: center;
           padding: 2rem;
         }
