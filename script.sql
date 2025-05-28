@@ -7,7 +7,7 @@
 CREATE TABLE instituicoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
-    dominio_email VARCHAR(100) UNIQUE
+    dominio_email VARCHAR(100) UNIQUE,
     cnpj VARCHAR(18) UNIQUE,
     email_contato VARCHAR(150),
     telefone_contato VARCHAR(20),
@@ -29,7 +29,7 @@ CREATE TABLE usuarios (
 CREATE TABLE alunos (
     usuario_id INT PRIMARY KEY,
     freemium BOOLEAN NOT NULL DEFAULT TRUE,
-    instituicao_id INT NULL,
+    instituicao_id INT NOT NULL,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (instituicao_id) REFERENCES instituicoes(id)
 );
@@ -65,7 +65,7 @@ CREATE TABLE professor_cursos (
 -- Matrículas
 CREATE TABLE matriculas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
+    aluno_id INT NOT NULL,
     curso_id INT NOT NULL,
     data_matricula DATETIME DEFAULT CURRENT_TIMESTAMP,
     status ENUM('ativa', 'concluida', 'cancelada') DEFAULT 'ativa',
@@ -74,8 +74,7 @@ CREATE TABLE matriculas (
     certificado_emitido BOOLEAN DEFAULT FALSE,
     
     CONSTRAINT fk_matricula_aluno FOREIGN KEY (aluno_id) REFERENCES alunos(usuario_id) ON DELETE CASCADE,
-    CONSTRAINT fk_matricula_curso FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE,
-    
+    CONSTRAINT fk_matricula_curso FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE, 
     UNIQUE (aluno_id, curso_id)
 );
 
@@ -104,7 +103,7 @@ CREATE TABLE visualizacoes_conteudo (
 
     UNIQUE (aluno_id, conteudo_id),
 
-    FOREIGN KEY (aluno_id) REFERENCES alunos(id) ON DELETE CASCADE,
+    FOREIGN KEY (aluno_id) REFERENCES alunos(usuario_id) ON DELETE CASCADE,
     FOREIGN KEY (conteudo_id) REFERENCES conteudos(id) ON DELETE CASCADE
 );
 
@@ -127,7 +126,7 @@ CREATE TABLE tentativas (
     atividade_id INT NOT NULL,
     aluno_id INT NOT NULL,
     resposta TEXT,
-    pontuacao DECIMAL(4,2) DEFAULT 0.0,
+    pontuacao DECIMAL(4,2) DEFAULT 0.00,
     data_tentativa DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (atividade_id) REFERENCES atividades(id) ON DELETE CASCADE,
     FOREIGN KEY (aluno_id) REFERENCES alunos(usuario_id) ON DELETE CASCADE
@@ -169,6 +168,7 @@ CREATE TABLE turma_alunos (
 );
 
 -- Views
+*Tornar funcional*
 CREATE VIEW vw_alunos_matriculados AS
 SELECT u.id AS usuario_id, u.nome AS aluno, u.email, c.nome AS curso, m.data_matricula, m.status
 FROM usuarios u
@@ -176,6 +176,7 @@ JOIN alunos a ON u.id = a.usuario_id
 JOIN matriculas m ON u.id = m.usuario_id
 JOIN cursos c ON m.curso_id = c.id;
 
+*Tornar funcional*
 CREATE VIEW vw_tentativas_com_feedback AS
 SELECT t.id AS tentativa_id, u.nome AS aluno, a.titulo AS atividade, t.resposta, t.nota, f.comentario, pu.nome AS professor
 FROM tentativas t
@@ -207,7 +208,7 @@ JOIN alunos a ON ta.aluno_id = a.usuario_id
 JOIN usuarios u ON a.usuario_id = u.id
 JOIN cursos c ON t.curso_id = c.id;
 
-
+*Tornar funcional*
 -- View para painel do professor
 CREATE VIEW progresso_atividade AS
 SELECT 
@@ -243,5 +244,5 @@ DELIMITER ;
 -- Índices adicionais
 CREATE INDEX idx_conteudos_curso_id ON conteudos(curso_id);
 CREATE INDEX idx_atividades_conteudo_id ON atividades(conteudo_id);
-CREATE INDEX idx_tentativas_usuario_atividade ON tentativas(usuario_id, atividade_id);
+CREATE INDEX idx_tentativas_usuario_atividade ON tentativas(aluno_id, atividade_id);
 CREATE INDEX idx_feedbacks_professor ON feedbacks(professor_id);
