@@ -3,10 +3,10 @@ import Image from 'next/image';
 
 const Perfil: React.FC = () => {
   return (
-    <div style={{ background: '#6cc4ed', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ background: '#BDE3FA', minHeight: '100vh', fontFamily: 'Arial, sans-serif' }}>
       {/* Topbar */}
       <div style={{
-        background: '#52483a',
+        background: '#0A2E4B',
         height: 48,
         display: 'flex',
         alignItems: 'center',
@@ -192,7 +192,7 @@ const Perfil: React.FC = () => {
         bottom: 0,
         left: 0,
         width: '100%',
-        background: '#52483a',
+        background: 'white',
         height: 60,
         display: 'flex',
         alignItems: 'center',
