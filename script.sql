@@ -167,23 +167,79 @@ CREATE TABLE turma_alunos (
     FOREIGN KEY (aluno_id) REFERENCES alunos(usuario_id) ON DELETE CASCADE
 );
 
+-- conversas
+CREATE TABLE conversas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(150), -- Usado em grupos (ex: "Turma 3A - Matemática")
+    tipo ENUM('privada', 'grupo') NOT NULL,
+    criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- conversa do participantes
+CREATE TABLE conversa_participantes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    conversa_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    adicionado_em DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversa_id) REFERENCES conversas(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    UNIQUE (conversa_id, usuario_id)
+);
+
+-- mensagens
+CREATE TABLE mensagens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    conversa_id INT NOT NULL,
+    remetente_id INT NOT NULL,
+    conteudo TEXT NOT NULL,
+    data_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
+    editada BOOLEAN DEFAULT FALSE,
+    deletada BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (conversa_id) REFERENCES conversas(id) ON DELETE CASCADE,
+    FOREIGN KEY (remetente_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    INDEX idx_conversa_envio (conversa_id, data_envio)
+);
+
+-- Mensagens_lidas
+CREATE TABLE mensagens_lidas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    mensagem_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    data_leitura DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (mensagem_id) REFERENCES mensagens(id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    UNIQUE (mensagem_id, usuario_id)
+);
+
+
 -- Views
-*Tornar funcional*
-CREATE VIEW vw_alunos_matriculados AS
-SELECT u.id AS usuario_id, u.nome AS aluno, u.email, c.nome AS curso, m.data_matricula, m.status
+CREATE OR REPLACE VIEW vw_alunos_matriculados AS
+SELECT 
+    u.id AS usuario_id, 
+    u.nome AS aluno, 
+    u.email, 
+    c.nome AS curso, 
+    m.data_matricula, 
+    m.status
 FROM usuarios u
 JOIN alunos a ON u.id = a.usuario_id
-JOIN matriculas m ON u.id = m.usuario_id
-JOIN cursos c ON m.curso_id = c.id;
+JOIN matriculas m ON m.aluno_id = a.usuario_id
+JOIN cursos c ON c.id = m.curso_id;
 
-*Tornar funcional*
-CREATE VIEW vw_tentativas_com_feedback AS
-SELECT t.id AS tentativa_id, u.nome AS aluno, a.titulo AS atividade, t.resposta, t.nota, f.comentario, pu.nome AS professor
+CREATE OR REPLACE VIEW vw_tentativas_com_feedback AS
+SELECT 
+    t.id AS tentativa_id,
+    u.nome AS aluno, 
+    a.titulo AS atividade, 
+    t.resposta, 
+    t.pontuacao AS nota,
+    f.mensagem AS comentario,
+    up.nome AS professor
 FROM tentativas t
-JOIN usuarios u ON t.usuario_id = u.id
-JOIN atividades a ON t.atividade_id = a.id
+JOIN usuarios u ON u.id = t.aluno_id
+JOIN atividades a ON a.id = t.atividade_id
 LEFT JOIN feedbacks f ON f.tentativa_id = t.id
-LEFT JOIN usuarios pu ON f.professor_id = pu.id;
+LEFT JOIN usuarios up ON up.id = f.professor_id;
 
 CREATE VIEW vw_professores_conteudos AS
 SELECT p.usuario_id AS professor_id, u.nome AS professor_nome, c.nome AS curso, ct.titulo AS conteudo, ct.tipo
@@ -208,24 +264,29 @@ JOIN alunos a ON ta.aluno_id = a.usuario_id
 JOIN usuarios u ON a.usuario_id = u.id
 JOIN cursos c ON t.curso_id = c.id;
 
-*Tornar funcional*
 -- View para painel do professor
-CREATE VIEW progresso_atividade AS
+CREATE OR REPLACE VIEW progresso_atividade AS
 SELECT 
-    a.id AS aluno_id,
-    a.nome AS aluno_nome,
+    a.usuario_id AS aluno_id,
+    u.nome AS aluno_nome,
     c.id AS conteudo_id,
     c.titulo AS conteudo_titulo,
-    COALESCE(vc.data_visualizacao, NULL) AS visualizou_em,
+    vc.data_visualizacao AS visualizou_em,
     COUNT(t.id) AS tentativas_feitas,
     MAX(t.pontuacao) AS melhor_nota
 FROM alunos a
-JOIN matriculas m ON m.aluno_id = a.id
+JOIN usuarios u ON u.id = a.usuario_id
+JOIN matriculas m ON m.aluno_id = a.usuario_id
 JOIN conteudos c ON c.curso_id = m.curso_id
-LEFT JOIN visualizacoes_conteudo vc ON vc.aluno_id = a.id AND vc.conteudo_id = c.id
+LEFT JOIN visualizacoes_conteudo vc ON vc.aluno_id = a.usuario_id AND vc.conteudo_id = c.id
 LEFT JOIN atividades atv ON atv.conteudo_id = c.id
-LEFT JOIN tentativas t ON t.atividade_id = atv.id AND t.aluno_id = a.id
-GROUP BY a.id, c.id;
+LEFT JOIN tentativas t ON t.atividade_id = atv.id AND t.aluno_id = a.usuario_id
+GROUP BY 
+    a.usuario_id, 
+    u.nome,
+    c.id, 
+    c.titulo,
+    vc.data_visualizacao;
 
 -- Triggers
 DELIMITER $$
