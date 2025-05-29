@@ -69,8 +69,8 @@ Desenvolver uma aplicação educacional que torne o aprendizado mais interativo 
 - **Alisson Gustavo** – Design e Testes 
 
 ## 📌 Funcionalidades previstas
-- [ ] Cadastro de usuários (alunos, professores)
-- [ ] CRUD de conteúdo educativo
+- [x] Cadastro de usuários (alunos, professores)
+- [x] CRUD de conteúdo educativo
 - [ ] Sistema de gamificação (pontos, conquistas)
 - [ ] Relatórios de desempenho em PDF
 - [ ] Painel administrativo
