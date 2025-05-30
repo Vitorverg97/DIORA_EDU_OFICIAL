@@ -61,7 +61,7 @@ const Perfil: React.FC = () => {
       {/* Rodapé funcional com ícones */}
       <footer className="bg-white py-3 flex justify-around items-center border-t">
         <button
-          onClick={() => window.location.href = "/pages/home"}
+          onClick={() => window.location.href = "/pages/home-aluno"}
           className="hover:scale-110 transition-transform duration-200"
         >
           <FaHome className="text-2xl text-[#0A2E4B]" />
