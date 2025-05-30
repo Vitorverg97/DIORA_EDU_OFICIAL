@@ -1,34 +1,31 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-// PUT /api/conteudos/[id]
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function GET(_req: Request, { params }: { params: { id: string } }) {
   try {
-    const conteudoAtualizado = await prisma.conteudo.update({
-      where: { ID_conteudo: id },
-      data: body,
-    })
-    return NextResponse.json(conteudoAtualizado)
+    const conteudo = await prisma.conteudo.findUnique({ where: { id: parseInt(params.id) } });
+    if (!conteudo) return NextResponse.json({ error: 'Conteúdo não encontrado' }, { status: 404 });
+    return NextResponse.json(conteudo);
   } catch (error) {
-    console.error('Erro ao atualizar conteudo:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar conteudo.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao buscar conteúdo' }, { status: 500 });
   }
 }
 
-// DELETE /api/conteudos/[id]
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
-    await prisma.conteudo.delete({
-      where: { ID_conteudo: id },
-    })
-    return NextResponse.json({ message: 'conteudo excluída com sucesso.' })
+    const data = await req.json();
+    const conteudo = await prisma.conteudo.update({ where: { id: parseInt(params.id) }, data });
+    return NextResponse.json(conteudo);
   } catch (error) {
-    console.error('Erro ao excluir conteudo:', error)
-    return NextResponse.json({ error: 'Erro ao excluir conteudo.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao atualizar conteúdo' }, { status: 500 });
+  }
+}
+
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  try {
+    await prisma.conteudo.delete({ where: { id: parseInt(params.id) } });
+    return NextResponse.json({ message: 'Conteúdo removido com sucesso' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Erro ao remover conteúdo' }, { status: 500 });
   }
 }

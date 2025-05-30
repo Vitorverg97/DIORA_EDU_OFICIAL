@@ -1,35 +1,23 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { z } from 'zod'
-
-const feedbackSchema = z.object({
-  ID_usuario: z.number().int().positive(),
-  ID_conteudo: z.number().int().positive(),
-  comentario: z.string().optional(),
-  avaliacao: z.number().int().min(1).max(5),
-})
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const lista = await prisma.feedback.findMany()
-    return NextResponse.json(lista)
-  } catch (err) {
-    console.error('Erro ao buscar feedbacks:', err)
-    return NextResponse.json({ error: 'Erro ao buscar feedbacks' }, { status: 500 })
+    const feedbacks = await prisma.feedback.findMany();
+    return NextResponse.json(feedbacks);
+  } catch (error) {
+    console.error('Erro ao buscar feedbacks:', error);
+    return NextResponse.json({ error: 'Erro ao buscar feedbacks' }, { status: 500 });
   }
 }
 
-export async function POST(req: Request) {
-  const body = await req.json()
-  const parsed = feedbackSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
-  }
+export async function POST(request: Request) {
   try {
-    const f = await prisma.feedback.create({ data: parsed.data })
-    return NextResponse.json(f, { status: 201 })
-  } catch (err) {
-    console.error('Erro ao criar feedback:', err)
-    return NextResponse.json({ error: 'Erro ao criar feedback' }, { status: 500 })
+    const data = await request.json();
+    const novoFeedback = await prisma.feedback.create({ data });
+    return NextResponse.json(novoFeedback, { status: 201 });
+  } catch (error) {
+    console.error('Erro ao criar feedback:', error);
+    return NextResponse.json({ error: 'Erro ao criar feedback' }, { status: 500 });
   }
 }

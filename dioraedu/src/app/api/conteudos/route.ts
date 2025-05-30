@@ -1,35 +1,23 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { z } from 'zod'
-
-const conteudoSchema = z.object({
-  ID_curso: z.number().int().positive(),
-  titulo: z.string().min(1),
-  descricao: z.string().min(1),
-  tipo: z.enum(['Texto', 'Vídeo', 'Exercício']),
-})
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const lista = await prisma.conteudo.findMany()
-    return NextResponse.json(lista)
-  } catch (err) {
-    console.error('Erro ao buscar conteúdos:', err)
-    return NextResponse.json({ error: 'Erro ao buscar conteúdos' }, { status: 500 })
+    const conteudos = await prisma.conteudo.findMany();
+    return NextResponse.json(conteudos);
+  } catch (error) {
+    console.error('Erro ao buscar conteúdos:', error);
+    return NextResponse.json({ error: 'Erro ao buscar conteúdos' }, { status: 500 });
   }
 }
 
-export async function POST(req: Request) {
-  const body = await req.json()
-  const parsed = conteudoSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
-  }
+export async function POST(request: Request) {
   try {
-    const cont = await prisma.conteudo.create({ data: parsed.data })
-    return NextResponse.json(cont, { status: 201 })
-  } catch (err) {
-    console.error('Erro ao criar conteúdo:', err)
-    return NextResponse.json({ error: 'Erro ao criar conteúdo' }, { status: 500 })
+    const data = await request.json();
+    const novoConteudo = await prisma.conteudo.create({ data });
+    return NextResponse.json(novoConteudo, { status: 201 });
+  } catch (error) {
+    console.error('Erro ao criar conteúdo:', error);
+    return NextResponse.json({ error: 'Erro ao criar conteúdo' }, { status: 500 });
   }
 }

@@ -1,34 +1,31 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-// PUT /api/tentativas/[id]
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function GET(_req: Request, { params }: { params: { id: string } }) {
   try {
-    const tentativaAtualizada = await prisma.tentativa.update({
-      where: { ID_tentativa: id },
-      data: body,
-    })
-    return NextResponse.json(tentativaAtualizada)
+    const tentativa = await prisma.tentativa.findUnique({ where: { id: parseInt(params.id) } });
+    if (!tentativa) return NextResponse.json({ error: 'Tentativa não encontrada' }, { status: 404 });
+    return NextResponse.json(tentativa);
   } catch (error) {
-    console.error('Erro ao atualizar tentativa:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar tentativa.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao buscar tentativa' }, { status: 500 });
   }
 }
 
-// DELETE /api/tentativas/[id]
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
-    await prisma.tentativa.delete({
-      where: { ID_tentativa: id },
-    })
-    return NextResponse.json({ message: 'tentativa excluída com sucesso.' })
+    const data = await req.json();
+    const tentativa = await prisma.tentativa.update({ where: { id: parseInt(params.id) }, data });
+    return NextResponse.json(tentativa);
   } catch (error) {
-    console.error('Erro ao excluir tentativa:', error)
-    return NextResponse.json({ error: 'Erro ao excluir tentativa.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao atualizar tentativa' }, { status: 500 });
+  }
+}
+
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  try {
+    await prisma.tentativa.delete({ where: { id: parseInt(params.id) } });
+    return NextResponse.json({ message: 'Tentativa removida com sucesso' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Erro ao remover tentativa' }, { status: 500 });
   }
 }

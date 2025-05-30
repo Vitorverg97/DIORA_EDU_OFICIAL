@@ -1,33 +1,31 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-// PUT /api/matriculas/[id]
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function GET(_req: Request, { params }: { params: { id: string } }) {
   try {
-    const matriculaAtualizada = await prisma.matricula.update({
-      where: { ID_matricula: id },
-      data: body,
-    })
-    return NextResponse.json(matriculaAtualizada)
+    const matricula = await prisma.matricula.findUnique({ where: { id: parseInt(params.id) } });
+    if (!matricula) return NextResponse.json({ error: 'Matrícula não encontrada' }, { status: 404 });
+    return NextResponse.json(matricula);
   } catch (error) {
-    console.error('Erro ao atualizar matricula:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar matricula.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao buscar matrícula' }, { status: 500 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
-    await prisma.matricula.delete({
-      where: { ID_matricula: id },
-    })
-    return NextResponse.json({ message: 'Matricula excluída com sucesso.' })
+    const data = await req.json();
+    const matricula = await prisma.matricula.update({ where: { id: parseInt(params.id) }, data });
+    return NextResponse.json(matricula);
   } catch (error) {
-    console.error('Erro ao excluir matricula:', error)
-    return NextResponse.json({ error: 'Erro ao excluir Matricula.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao atualizar matrícula' }, { status: 500 });
+  }
+}
+
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  try {
+    await prisma.matricula.delete({ where: { id: parseInt(params.id) } });
+    return NextResponse.json({ message: 'Matrícula removida com sucesso' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Erro ao remover matrícula' }, { status: 500 });
   }
 }

@@ -1,34 +1,43 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-// PUT /api/atividades/[id]
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const atividadeAtualizada = await prisma.atividade.update({
-      where: { ID_atividade: id },
-      data: body,
-    })
-    return NextResponse.json(atividadeAtualizada)
+    const atividade = await prisma.atividade.findUnique({
+      where: { id: parseInt(params.id) },
+    });
+    if (!atividade) {
+      return NextResponse.json({ error: 'Atividade não encontrada' }, { status: 404 });
+    }
+    return NextResponse.json(atividade);
   } catch (error) {
-    console.error('Erro ao atualizar atividade:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar atividade.' }, { status: 500 })
+    console.error('Erro ao buscar atividade:', error);
+    return NextResponse.json({ error: 'Erro ao buscar atividade' }, { status: 500 });
   }
 }
 
-// DELETE /api/atividades/[id]
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
+  try {
+    const data = await request.json();
+    const atividadeAtualizada = await prisma.atividade.update({
+      where: { id: parseInt(params.id) },
+      data,
+    });
+    return NextResponse.json(atividadeAtualizada);
+  } catch (error) {
+    console.error('Erro ao atualizar atividade:', error);
+    return NextResponse.json({ error: 'Erro ao atualizar atividade' }, { status: 500 });
+  }
+}
 
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
     await prisma.atividade.delete({
-      where: { ID_atividade: id },
-    })
-    return NextResponse.json({ message: 'Atividade excluída com sucesso.' })
+      where: { id: parseInt(params.id) },
+    });
+    return NextResponse.json({ message: 'Atividade removida com sucesso' });
   } catch (error) {
-    console.error('Erro ao excluir atividade:', error)
-    return NextResponse.json({ error: 'Erro ao excluir atividade.' }, { status: 500 })
+    console.error('Erro ao remover atividade:', error);
+    return NextResponse.json({ error: 'Erro ao remover atividade' }, { status: 500 });
   }
 }

@@ -1,34 +1,31 @@
-// PUT /api/feedbacks/[id]
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
 
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function GET(_req: Request, { params }: { params: { id: string } }) {
   try {
-    const feedbackAtualizado = await prisma.feedback.update({
-      where: { ID_feedback: id },
-      data: body,
-    })
-    return NextResponse.json(feedbackAtualizado)
+    const feedback = await prisma.feedback.findUnique({ where: { id: parseInt(params.id) } });
+    if (!feedback) return NextResponse.json({ error: 'Feedback não encontrado' }, { status: 404 });
+    return NextResponse.json(feedback);
   } catch (error) {
-    console.error('Erro ao atualizar feedback:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar feedback.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao buscar feedback' }, { status: 500 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
-    await prisma.feedback.delete({
-      where: { ID_feedback: id },
-    })
-    return NextResponse.json({ message: 'Feedback excluída com sucesso.' })
+    const data = await req.json();
+    const feedback = await prisma.feedback.update({ where: { id: parseInt(params.id) }, data });
+    return NextResponse.json(feedback);
   } catch (error) {
-    console.error('Erro ao excluir feedback:', error)
-    return NextResponse.json({ error: 'Erro ao excluir feedback.' }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao atualizar feedback' }, { status: 500 });
+  }
+}
+
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  try {
+    await prisma.feedback.delete({ where: { id: parseInt(params.id) } });
+    return NextResponse.json({ message: 'Feedback removido com sucesso' });
+  } catch (error) {
+    return NextResponse.json({ error: 'Erro ao remover feedback' }, { status: 500 });
   }
 }
