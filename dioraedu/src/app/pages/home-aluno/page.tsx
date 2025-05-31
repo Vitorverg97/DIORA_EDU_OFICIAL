@@ -1,10 +1,14 @@
 'use client'
 
+import React, { useState } from 'react';
 import { FaHome, FaUserAlt, FaHeart } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Link from "next/link";
+import ConfigSidebar from '../../../components/ConfigSidebar';
 
 export default function Classes() {
+  const [configAberta, setConfigAberta] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col">
       
@@ -17,9 +21,11 @@ export default function Classes() {
         <input
           type="text"
           placeholder="Buscar..."
-          className="rounded px-3 py-1 text-white w-1/3"
+          className="rounded px-3 py-1 text-white w-1/3 bg-[#13426A]"
         />
-        <BsThreeDotsVertical className="text-xl cursor-pointer" />
+        <button onClick={() => setConfigAberta(true)}>
+          <BsThreeDotsVertical className="text-xl cursor-pointer" />
+        </button>
       </header>
 
       {/* Conteúdo principal */}
@@ -28,7 +34,6 @@ export default function Classes() {
         <div className="flex-1">
           <h2 className="text-3xl font-bold mb-4">Classes</h2>
           <div className="grid grid-cols-2 gap-8">
-            {/* Cartões de disciplinas */}
             <DisciplinaCard
               imagemTopo="/assets/topo-matematica.png"
               titulo="Matemática"
@@ -71,7 +76,10 @@ export default function Classes() {
               'Luana da Silva Macedo',
               'Victor Vieira de Souza'
             ].map((nome, i) => (
-              <li key={i} className="bg-white rounded px-3 py-2 flex justify-between items-center shadow hover:bg-gray-100 cursor-pointer">
+              <li
+                key={i}
+                className="bg-white rounded px-3 py-2 flex justify-between items-center shadow hover:bg-gray-100 cursor-pointer"
+              >
                 {nome}
                 <span>➤</span>
               </li>
@@ -83,7 +91,7 @@ export default function Classes() {
       {/* Menu inferior */}
       <footer className="bg-white py-3 flex justify-around items-center border-t">
         <button
-          onClick={() => window.location.href = "/pages/home"}
+          onClick={() => window.location.href = "/pages/home-aluno"}
           className="hover:scale-110 transition-transform duration-200"
         >
           <FaHome className="text-2xl text-[#0A2E4B]" />
@@ -100,6 +108,9 @@ export default function Classes() {
           <img src="/assets/app-store.png" alt="App Store" className="h-8" />
         </div>
       </footer>
+
+      {/* Menu de configurações */}
+      <ConfigSidebar isOpen={configAberta} onClose={() => setConfigAberta(false)} />
     </div>
   );
 }
@@ -120,26 +131,23 @@ function DisciplinaCard({
 }) {
   return (
     <Link href={link}>
-  <div className="w-full rounded-xl cursor-pointer transition-all duration-300">
-    {/* Topo com imagem de fundo */}
-    <div
-      className="h-20 bg-cover bg-center rounded-t-xl"
-      style={{ backgroundImage: `url(${imagemTopo})` }}
-    ></div>
-
-    {/* Parte inferior branca com sombra */}
-    <div className="bg-white px-3 py-6 flex justify-between items-center rounded-b-xl shadow-md hover:shadow-lg">
-      <div>
-        <h4 className="text-base font-bold text-[#0A2E4B]">{titulo}</h4>
-        <p className="text-sm text-[#0A2E4B]">{professor}</p>
+      <div className="w-full rounded-xl cursor-pointer transition-all duration-300">
+        <div
+          className="h-20 bg-cover bg-center rounded-t-xl"
+          style={{ backgroundImage: `url(${imagemTopo})` }}
+        ></div>
+        <div className="bg-white px-3 py-6 flex justify-between items-center rounded-b-xl shadow-md hover:shadow-lg">
+          <div>
+            <h4 className="text-base font-bold text-[#0A2E4B]">{titulo}</h4>
+            <p className="text-sm text-[#0A2E4B]">{professor}</p>
+          </div>
+          <img
+            src={imagem}
+            alt={professor}
+            className="h-10 w-10 rounded-full object-cover border-2 border-white shadow"
+          />
+        </div>
       </div>
-      <img
-        src={imagem}
-        alt={professor}
-        className="h-10 w-10 rounded-full object-cover border-2 border-white shadow"
-      />
-    </div>
-  </div>
-</Link>
+    </Link>
   );
 }

@@ -4,10 +4,12 @@ import React, { useState } from 'react'
 import { FaHome, FaUserAlt, FaHeart } from "react-icons/fa"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import Link from "next/link"
-import Sidebar from '../../../components/Sidebar' // caminho certo com base na tua estrutura
+import Sidebar from '../../../components/Sidebar'
+import ConfigSidebar from '../../../components/ConfigSidebar'
 
 export default function ProfessorHome() {
   const [sidebarAberta, setSidebarAberta] = useState(false)
+  const [configAberta, setConfigAberta] = useState(false)
 
   return (
     <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col">
@@ -21,9 +23,11 @@ export default function ProfessorHome() {
         <input
           type="text"
           placeholder="Buscar..."
-          className="rounded px-3 py-1 text-white w-1/3"
+          className="rounded px-3 py-1 text-white w-1/3 bg-[#13426A]"
         />
-        <BsThreeDotsVertical className="text-xl cursor-pointer" />
+        <button onClick={() => setConfigAberta(true)}>
+          <BsThreeDotsVertical className="text-xl cursor-pointer" />
+        </button>
       </header>
 
       {/* Conteúdo principal */}
@@ -54,7 +58,7 @@ export default function ProfessorHome() {
 
         {/* Coluna de Chat (opcional) */}
         <aside className="w-80 bg-white bg-opacity-70 p-4 rounded-lg shadow ml-6">
-          <h3 className="text-lg font-bold mb-3 bg-blue-700 text-white px-3 py-2 rounded">Conversas</h3>
+          <h3 className="text-lg font-bold mb-3 bg-blue-700 text-white px-3 py-2 rounded">Novo Chat</h3>
           <ul className="space-y-2">
             {['Gabriela Maria Cristina', 'Luana da Silva Macedo', 'Victor Vieira de Souza'].map((nome, i) => (
               <li
@@ -72,12 +76,21 @@ export default function ProfessorHome() {
       {/* Sidebar para lançar aula */}
       <Sidebar isOpen={sidebarAberta} onClose={() => setSidebarAberta(false)} />
 
+      {/* Sidebar de configurações */}
+      <ConfigSidebar isOpen={configAberta} onClose={() => setConfigAberta(false)} />
+
       {/* Menu inferior */}
       <footer className="bg-white py-3 flex justify-around items-center border-t">
-        <button onClick={() => window.location.href = "/pages/home-professor"}>
+        <button
+          onClick={() => window.location.href = "/pages/home-professor"}
+          className="hover:scale-110 transition-transform duration-200"
+        >
           <FaHome className="text-2xl text-[#0A2E4B]" />
         </button>
-        <button onClick={() => window.location.href = "/pages/perfil"}>
+        <button
+          onClick={() => window.location.href = "/pages/perfil"}
+          className="hover:scale-110 transition-transform duration-200"
+        >
           <FaUserAlt className="text-2xl text-[#0A2E4B]" />
         </button>
         <FaHeart className="text-2xl text-[#0A2E4B]" />
