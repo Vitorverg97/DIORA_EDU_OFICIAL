@@ -10,6 +10,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [tipoUsuario, setTipoUsuario] = useState('aluno');
 
   return (
     <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col justify-between">
@@ -17,17 +18,30 @@ export default function Cadastro() {
       {/* Conteúdo principal */}
       <div className="mt-16 text-center flex flex-col items-center gap-4">
         {/* Logo */}
-        <Image src="/assets/icone-cerebro.svg"
-        alt="Logo-DioraEDU"
-        className="w-30 h-30"
-        width={261}
-        height={292} /> 
+        <Image
+          src="/assets/icone-cerebro.svg"
+          alt="Logo-DioraEDU"
+          className="w-30 h-30"
+          width={261}
+          height={292}
+        />
 
         {/* Título */}
         <h1 className="text-2xl font-bold text-black">Bem-vindo! Cadastre-se para começar</h1>
 
         {/* Formulário */}
         <div className="flex flex-col items-center gap-3 w-80">
+
+          {/* Select movido para cima */}
+          <select
+            className="px-4 py-2 text-black rounded w-full outline-none bg-[#BDE3FA]"
+            value={tipoUsuario}
+            onChange={(e) => setTipoUsuario(e.target.value)}
+          >
+            <option value="aluno">Sou Aluno</option>
+            <option value="professor">Sou Professor</option>
+          </select>
+
           <input
             type="text"
             placeholder="Nome completo"
@@ -56,10 +70,11 @@ export default function Cadastro() {
             value={confirmarSenha}
             onChange={(e) => setConfirmarSenha(e.target.value)}
           />
+
           <button
             onClick={() => {
-              alert("Cadastro concluído com sucesso!\nVerifique sua caixa de entrada para confirmar seu e-mail.");
-              window.location.href = "/pages/home";
+              alert(`Cadastro concluído como ${tipoUsuario}!\nVerifique sua caixa de entrada para confirmar seu e-mail.`);
+              window.location.href = "/pages/home-aluno";
             }}
             className="bg-[#4A4A4A] text-white px-6 py-2 rounded w-full hover:opacity-90"
           >
@@ -102,16 +117,19 @@ export default function Cadastro() {
         <button className="hover:underline">Sobre nós</button>
         <button className="hover:underline">Mídias Sociais</button>
         <div className="flex gap-2">
-          <Image src="/assets/google-play.png"
-          alt="Google Play"
-          className="h-10" 
-          width={130}
-          height={80}/>
-          <Image src="/assets/app-store.png"
-          alt="App Store"
-          className="h-10"
-          width={130}
-          height={80}
+          <Image
+            src="/assets/google-play.png"
+            alt="Google Play"
+            className="h-10"
+            width={130}
+            height={80}
+          />
+          <Image
+            src="/assets/app-store.png"
+            alt="App Store"
+            className="h-10"
+            width={130}
+            height={80}
           />
         </div>
       </footer>
