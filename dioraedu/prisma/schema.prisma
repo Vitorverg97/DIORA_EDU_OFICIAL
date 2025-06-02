@@ -7,90 +7,281 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model usuario {
-  ID_usuario Int       @id @default(autoincrement())
-  nome       String
-  email      String    @unique
-  senha      String
-  tipo       TipoUsuario
-  matriculas matricula[]
-  tentativas tentativa[]
-  feedbacks  feedback[]
+model Instituicao {
+  id               Int       @id @default(autoincrement())
+  nome             String    @db.VarChar(150)
+  dominioEmail     String?   @unique @db.VarChar(100)
+  cnpj             String?   @unique @db.VarChar(18)
+  emailContato     String?   @db.VarChar(150)
+  telefoneContato  String?   @db.VarChar(20)
+  status           Status    @default(ativa)
+  dataCadastro     DateTime  @default(now())
+
+  alunos           Aluno[]
+  professores      Professor[]
+  turmas           Turma[]
 }
 
-model curso {
-  ID_curso   Int         @id @default(autoincrement())
-  nome       String
-  descricao  String
-  matriculas matricula[]
-  conteudos  conteudo[]
+model Usuario {
+  id         Int        @id @default(autoincrement())
+  nome       String     @db.VarChar(100)
+  email      String     @unique @db.VarChar(150)
+  senhaHash  String     @db.VarChar(255)
+  perfil     Perfil
+  criadoEm   DateTime   @default(now())
+
+  aluno      Aluno?
+  professor  Professor?
+  mensagens  Mensagem[] @relation("Remetente")
+  participantes ConversaParticipante[]
+  mensagensLidas MensagemLida[]
 }
 
-model matricula {
-  ID_matricula   Int     @id @default(autoincrement())
-  ID_usuario     Int
-  ID_curso       Int
-  data_matricula DateTime
+model Aluno {
+  usuarioId      Int      @id
+  freemium       Boolean  @default(true)
+  instituicaoId  Int
 
-  usuario usuario @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
-  curso   curso   @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
+  usuario        Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  instituicao    Instituicao @relation(fields: [instituicaoId], references: [id])
+  matriculas     Matricula[]
+  visualizacoes  VisualizacaoConteudo[]
+  tentativas     Tentativa[]
+  turmas         TurmaAluno[]
 
-  @@unique([ID_usuario, ID_curso])
+  @@map("alunos")
 }
 
-model conteudo {
-  ID_conteudo Int       @id @default(autoincrement())
-  ID_curso    Int
-  titulo      String
-  descricao   String
-  tipo        TipoConteudo
+model Professor {
+  usuarioId      Int      @id
+  liberado       Boolean  @default(false)
+  instituicaoId  Int
 
-  curso      curso     @relation(fields: [ID_curso], references: [ID_curso], onDelete: Cascade)
-  atividades atividade[]
-  tentativas tentativa[]
-  feedbacks  feedback[]
+  usuario        Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  instituicao    Instituicao @relation(fields: [instituicaoId], references: [id])
+  cursos         ProfessorCurso[]
+  turmas         Turma[]
+  feedbacks      Feedback[]
+
+  @@map("professores")
 }
 
-model atividade {
-  ID_atividade Int       @id @default(autoincrement())
-  ID_conteudo  Int
-  titulo       String
-  descricao    String
-  data_criacao DateTime
+model Curso {
+  id           Int       @id @default(autoincrement())
+  nome         String    @db.VarChar(150)
+  criadoEm     DateTime  @default(now())
 
-  conteudo conteudo @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+  conteudos    Conteudo[]
+  matriculas   Matricula[]
+  professores  ProfessorCurso[]
+  turmas       Turma[]
 }
 
-model tentativa {
-  ID_tentativa   Int       @id @default(autoincrement())
-  ID_usuario     Int
-  ID_conteudo    Int
-  pontuacao      Int
-  data_tentativa DateTime  @default(now())
+model ProfessorCurso {
+  id           Int       @id @default(autoincrement())
+  professorId  Int
+  cursoId      Int
+  dataAtribuicao DateTime @default(now())
 
-  usuario  usuario  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
-  conteudo conteudo @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+  professor    Professor @relation(fields: [professorId], references: [usuarioId], onDelete: Cascade)
+  curso        Curso     @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+
+  @@unique([professorId, cursoId])
 }
 
-model feedback {
-  ID_feedback    Int       @id @default(autoincrement())
-  ID_usuario     Int
-  ID_conteudo    Int
-  comentario     String?
-  avaliacao      Int       @db.TinyInt
-  data_feedback  DateTime  @default(now())
+model Matricula {
+  id                Int       @id @default(autoincrement())
+  alunoId           Int
+  cursoId           Int
+  dataMatricula     DateTime  @default(now())
+  status            MatriculaStatus @default(ativa)
+  notaFinal         Decimal?  @db.Decimal(5, 2)
+  certificadoEmitido Boolean  @default(false)
 
-  usuario  usuario  @relation(fields: [ID_usuario], references: [ID_usuario], onDelete: Cascade)
-  conteudo conteudo @relation(fields: [ID_conteudo], references: [ID_conteudo], onDelete: Cascade)
+  aluno             Aluno     @relation(fields: [alunoId], references: [usuarioId], onDelete: Cascade)
+  curso             Curso     @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoId, cursoId])
 }
 
-enum TipoUsuario {
-  Aluno
-  Professor
+model Conteudo {
+  id                Int       @id @default(autoincrement())
+  cursoId           Int
+  titulo            String    @db.VarChar(150)
+  descricao         String?   @db.Text
+  tipo              TipoConteudo
+  urlArquivo        String?   @db.Text
+  ordem             Int       @default(0)
+  ativo             Boolean   @default(true)
+  dataCriacao       DateTime  @default(now())
+  ultimaAtualizacao DateTime  @updatedAt
+
+  curso             Curso     @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+  visualizacoes     VisualizacaoConteudo[]
+  atividades        Atividade[]
+}
+
+model VisualizacaoConteudo {
+  id            Int       @id @default(autoincrement())
+  alunoId       Int
+  conteudoId    Int
+  dataVisualizacao DateTime @default(now())
+
+  aluno         Aluno     @relation(fields: [alunoId], references: [usuarioId], onDelete: Cascade)
+  conteudo      Conteudo  @relation(fields: [conteudoId], references: [id], onDelete: Cascade)
+
+  @@unique([alunoId, conteudoId])
+}
+
+model Atividade {
+  id           Int       @id @default(autoincrement())
+  conteudoId   Int
+  titulo       String    @db.VarChar(150)
+  enunciado    String    @db.Text
+  tipo         TipoAtividade @default(objetiva)
+  peso         Decimal   @default(1.00) @db.Decimal(4, 2)
+  ativo        Boolean   @default(true)
+  dataCriacao  DateTime  @default(now())
+
+  conteudo     Conteudo  @relation(fields: [conteudoId], references: [id], onDelete: Cascade)
+  tentativas   Tentativa[]
+}
+
+model Tentativa {
+  id           Int       @id @default(autoincrement())
+  atividadeId  Int
+  alunoId      Int
+  resposta     String?   @db.Text
+  pontuacao    Decimal   @default(0.00) @db.Decimal(4, 2)
+  dataTentativa DateTime @default(now())
+
+  atividade    Atividade @relation(fields: [atividadeId], references: [id], onDelete: Cascade)
+  aluno        Aluno     @relation(fields: [alunoId], references: [usuarioId], onDelete: Cascade)
+  feedback     Feedback[]
+}
+
+model Feedback {
+  id           Int       @id @default(autoincrement())
+  tentativaId  Int
+  professorId  Int
+  mensagem     String    @db.Text
+  dataFeedback DateTime  @default(now())
+
+  tentativa    Tentativa @relation(fields: [tentativaId], references: [id], onDelete: Cascade)
+  professor    Professor @relation(fields: [professorId], references: [usuarioId], onDelete: Cascade)
+}
+
+model Turma {
+  id            Int       @id @default(autoincrement())
+  nome          String    @db.VarChar(100)
+  cursoId       Int
+  professorId   Int
+  instituicaoId Int?
+
+  dataInicio    DateTime?
+  dataFim       DateTime?
+
+  curso         Curso     @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+  professor     Professor @relation(fields: [professorId], references: [usuarioId], onDelete: Cascade)
+  instituicao   Instituicao? @relation(fields: [instituicaoId], references: [id])
+  alunos        TurmaAluno[]
+}
+
+model TurmaAluno {
+  id          Int      @id @default(autoincrement())
+  turmaId     Int
+  alunoId     Int
+  dataEntrada DateTime @default(now())
+
+  turma       Turma    @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+  aluno       Aluno    @relation(fields: [alunoId], references: [usuarioId], onDelete: Cascade)
+}
+
+model Conversa {
+  id        Int      @id @default(autoincrement())
+  nome      String?  @db.VarChar(150)
+  tipo      TipoConversa
+  criadoEm  DateTime @default(now())
+
+  participantes ConversaParticipante[]
+  mensagens     Mensagem[]
+}
+
+model ConversaParticipante {
+  id           Int      @id @default(autoincrement())
+  conversaId   Int
+  usuarioId    Int
+  adicionadoEm DateTime @default(now())
+
+  conversa     Conversa @relation(fields: [conversaId], references: [id], onDelete: Cascade)
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([conversaId, usuarioId])
+}
+
+model Mensagem {
+  id          Int      @id @default(autoincrement())
+  conversaId  Int
+  remetenteId Int
+  conteudo    String   @db.Text
+  dataEnvio   DateTime @default(now())
+  editada     Boolean  @default(false)
+  deletada    Boolean  @default(false)
+
+  conversa    Conversa @relation(fields: [conversaId], references: [id], onDelete: Cascade)
+  remetente   Usuario  @relation("Remetente", fields: [remetenteId], references: [id], onDelete: Cascade)
+  lidas       MensagemLida[]
+
+  @@index([conversaId, dataEnvio], name: "idx_conversa_envio")
+}
+
+model MensagemLida {
+  id          Int      @id @default(autoincrement())
+  mensagemId  Int
+  usuarioId   Int
+  dataLeitura DateTime @default(now())
+
+  mensagem    Mensagem @relation(fields: [mensagemId], references: [id], onDelete: Cascade)
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([mensagemId, usuarioId])
+}
+
+// Enums
+enum Perfil {
+  aluno
+  professor
+  admin
+}
+
+enum Status {
+  ativa
+  inativa
 }
 
 enum TipoConteudo {
-  Texto
-  Vídeo
-  Exercício
+  video
+  leitura
+  quiz
+  simulado
+  pdf
+  audio
+  desafio
+}
+
+enum TipoAtividade {
+  objetiva
+  discursiva
+  múltipla_escolha
+}
+
+enum TipoConversa {
+  privada
+  grupo
+}
+
+enum MatriculaStatus {
+  ativa
+  concluida
+  cancelada
 }

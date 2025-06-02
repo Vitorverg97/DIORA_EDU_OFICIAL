@@ -1,34 +1,27 @@
-// PUT /api/feedbacks/[id]
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/authMiddleware';
 
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const feedbackAtualizado = await prisma.feedback.update({
-      where: { ID_feedback: id },
-      data: body,
-    })
-    return NextResponse.json(feedbackAtualizado)
-  } catch (error) {
-    console.error('Erro ao atualizar feedback:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar feedback.' }, { status: 500 })
+    const atualizado = await prisma.feedback.update({
+      where: { id: Number(params.id) },
+      data,
+    });
+    return NextResponse.json(atualizado);
+  } catch {
+    return NextResponse.json({ error: 'feedback não encontrada' }, { status: 404 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
   try {
-    await prisma.feedback.delete({
-      where: { ID_feedback: id },
-    })
-    return NextResponse.json({ message: 'Feedback excluída com sucesso.' })
-  } catch (error) {
-    console.error('Erro ao excluir feedback:', error)
-    return NextResponse.json({ error: 'Erro ao excluir feedback.' }, { status: 500 })
+    await prisma.feedback.delete({ where: { id: Number(params.id) } });
+    return NextResponse.json({}, { status: 204 });
+  } catch {
+    return NextResponse.json({ error: 'feedback não encontrada' }, { status: 404 });
   }
 }

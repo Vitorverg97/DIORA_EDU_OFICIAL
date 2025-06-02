@@ -1,61 +1,41 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { z } from 'zod'
-import bcrypt from 'bcryptjs'
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
+import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
+import bcrypt from 'bcryptjs';
 
-// Schema para validar os dados de entrada
-const usuarioSchema = z.object({
-  nome: z.string().min(1),
-  email: z.string().email(),
-  senha: z.string().min(6),
-  tipo: z.enum(['Aluno', 'Professor']),
-})
-
-// GET /api/usuarios
-export async function GET() {
-  try {
-    const usuarios = await prisma.usuario.findMany({
-      select: {
-        ID_usuario: true,
-        nome: true,
-        email: true,
-        tipo: true,
-      },
-    })
-    return NextResponse.json(usuarios, { status: 200 })
-  } catch (error) {
-    console.error('Erro ao buscar usuários:', error)
-    return NextResponse.json({ error: 'Erro ao buscar usuários' }, { status: 500 })
-  }
+export async function GET(req: NextRequest) {
+  await authenticate(req); // lança erro 401 se não autenticado
+  const usuarios = await prisma.usuario.findMany();
+  return NextResponse.json(usuarios);
 }
 
-// POST /api/usuarios
-export async function POST(req: Request) {
-  const body = await req.json()
-  const result = usuarioSchema.safeParse(body)
+export async function POST(req: NextRequest) {
+  // await authenticate(req); // descomente se for necessário autenticar
 
-  if (!result.success) {
-    return NextResponse.json({ error: 'Dados inválidos', issues: result.error.errors }, { status: 400 })
+  const { nome, email, senha, perfil } = await req.json();
+  if (!nome || !email || !senha || !perfil) {
+    return NextResponse.json({ message: 'Dados obrigatórios' }, { status: 400 });
   }
 
-  const { nome, email, senha: senhaInput, tipo } = result.data // renomeando 'senha' para evitar conflitos
-
-  try {
-    const senhaHash: string = await bcrypt.hash(senhaInput, 10) // adicionando tipagem explícita
-
-    const novoUsuario = await prisma.usuario.create({
-      data: { nome, email, senha: senhaHash, tipo },
-      select: {
-        ID_usuario: true,
-        nome: true,
-        email: true,
-        tipo: true,
-      }
-    })
-
-    return NextResponse.json(novoUsuario, { status: 201 })
-  } catch (error) {
-    console.error('Erro ao criar usuário:', error)
-    return NextResponse.json({ error: 'Erro ao criar usuário' }, { status: 500 })
+  // Verifica se já existe usuário
+  const existe = await prisma.usuario.findUnique({ where: { email } });
+  if (existe) {
+    return NextResponse.json({ message: 'E-mail já cadastrado' }, { status: 409 });
   }
+
+  // Gera hash seguro da senha
+  const senhaHash = await bcrypt.hash(senha, 10);
+
+  // Cria o usuário no banco
+  const novoUsuario = await prisma.usuario.create({
+    data: { nome, email, senhaHash, perfil }
+  });
+
+  // Não retorne o hash na resposta!
+  return NextResponse.json({
+    id: novoUsuario.id,
+    nome: novoUsuario.nome,
+    email: novoUsuario.email,
+    perfil: novoUsuario.perfil
+  }, { status: 201 });
 }

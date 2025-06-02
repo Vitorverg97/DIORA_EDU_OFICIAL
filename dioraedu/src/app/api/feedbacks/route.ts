@@ -1,35 +1,20 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { z } from 'zod'
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
+import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 
-const feedbackSchema = z.object({
-  ID_usuario: z.number().int().positive(),
-  ID_conteudo: z.number().int().positive(),
-  comentario: z.string().optional(),
-  avaliacao: z.number().int().min(1).max(5),
-})
-
-export async function GET() {
-  try {
-    const lista = await prisma.feedback.findMany()
-    return NextResponse.json(lista)
-  } catch (err) {
-    console.error('Erro ao buscar feedbacks:', err)
-    return NextResponse.json({ error: 'Erro ao buscar feedbacks' }, { status: 500 })
-  }
+export async function GET(req: NextRequest) {
+  await authenticate(req); // lança erro 401 se não autenticado
+  const feedbacks = await prisma.feedback.findMany();
+  return NextResponse.json(feedbacks);
 }
 
-export async function POST(req: Request) {
-  const body = await req.json()
-  const parsed = feedbackSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
-  }
+export async function POST(req: NextRequest) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const f = await prisma.feedback.create({ data: parsed.data })
-    return NextResponse.json(f, { status: 201 })
-  } catch (err) {
-    console.error('Erro ao criar feedback:', err)
-    return NextResponse.json({ error: 'Erro ao criar feedback' }, { status: 500 })
+    const nova = await prisma.feedback.create({ data });
+    return NextResponse.json(nova, { status: 201 });
+  } catch (e) {
+    return NextResponse.json({ error: 'Erro ao criar feedback', details: e }, { status: 400 });
   }
 }

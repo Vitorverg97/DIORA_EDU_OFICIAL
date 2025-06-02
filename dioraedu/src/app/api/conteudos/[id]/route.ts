@@ -1,34 +1,27 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/authMiddleware';
 
-// PUT /api/conteudos/[id]
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const conteudoAtualizado = await prisma.conteudo.update({
-      where: { ID_conteudo: id },
-      data: body,
-    })
-    return NextResponse.json(conteudoAtualizado)
-  } catch (error) {
-    console.error('Erro ao atualizar conteudo:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar conteudo.' }, { status: 500 })
+    const atualizado = await prisma.conteudo.update({
+      where: { id: Number(params.id) },
+      data,
+    });
+    return NextResponse.json(atualizado);
+  } catch {
+    return NextResponse.json({ error: 'conteudo não encontrada' }, { status: 404 });
   }
 }
 
-// DELETE /api/conteudos/[id]
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
   try {
-    await prisma.conteudo.delete({
-      where: { ID_conteudo: id },
-    })
-    return NextResponse.json({ message: 'conteudo excluída com sucesso.' })
-  } catch (error) {
-    console.error('Erro ao excluir conteudo:', error)
-    return NextResponse.json({ error: 'Erro ao excluir conteudo.' }, { status: 500 })
+    await prisma.conteudo.delete({ where: { id: Number(params.id) } });
+    return NextResponse.json({}, { status: 204 });
+  } catch {
+    return NextResponse.json({ error: 'conteudo não encontrada' }, { status: 404 });
   }
 }

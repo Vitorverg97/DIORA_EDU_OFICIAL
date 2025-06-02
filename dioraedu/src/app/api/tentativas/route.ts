@@ -1,35 +1,20 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { z } from 'zod'
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
+import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 
-const tentativaSchema = z.object({
-  ID_usuario: z.number().int().positive(),
-  ID_conteudo: z.number().int().positive(),
-  pontuacao: z.number().int().min(0),
-  // data_tentativa fica com default CURRENT_TIMESTAMP se não enviada
-})
-
-export async function GET() {
-  try {
-    const lista = await prisma.tentativa.findMany()
-    return NextResponse.json(lista)
-  } catch (err) {
-    console.error('Erro ao buscar tentativas:', err)
-    return NextResponse.json({ error: 'Erro ao buscar tentativas' }, { status: 500 })
-  }
+export async function GET(req: NextRequest) {
+  await authenticate(req); // lança erro 401 se não autenticado
+  const tentativas = await prisma.tentativa.findMany();
+  return NextResponse.json(tentativas);
 }
 
-export async function POST(req: Request) {
-  const body = await req.json()
-  const parsed = tentativaSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
-  }
+export async function POST(req: NextRequest) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const t = await prisma.tentativa.create({ data: parsed.data })
-    return NextResponse.json(t, { status: 201 })
-  } catch (err) {
-    console.error('Erro ao criar tentativa:', err)
-    return NextResponse.json({ error: 'Erro ao criar tentativa' }, { status: 500 })
+    const nova = await prisma.tentativa.create({ data });
+    return NextResponse.json(nova, { status: 201 });
+  } catch (e) {
+    return NextResponse.json({ error: 'Erro ao criar tentativa', details: e }, { status: 400 });
   }
 }

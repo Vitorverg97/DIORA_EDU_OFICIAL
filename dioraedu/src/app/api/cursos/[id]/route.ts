@@ -1,43 +1,27 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { z } from 'zod'
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/authMiddleware';
 
-const cursoSchema = z.object({
-  nome: z.string().min(1),
-  descricao: z.string().optional(),
-})
-
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-  const result = cursoSchema.safeParse(body)
-
-  if (!result.success) {
-    return NextResponse.json({ error: 'Dados inválidos', issues: result.error.errors }, { status: 400 })
-  }
-
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const cursoAtualizado = await prisma.curso.update({
-      where: { ID_curso: id },
-      data: result.data,
-    })
-    return NextResponse.json(cursoAtualizado, { status: 200 })
-  } catch (error) {
-    console.error ('Erro ao atualizar curso: ', error)
-    return NextResponse.json({ error: 'Erro ao atualizar curso' }, { status: 500 })
+    const atualizado = await prisma.curso.update({
+      where: { id: Number(params.id) },
+      data,
+    });
+    return NextResponse.json(atualizado);
+  } catch {
+    return NextResponse.json({ error: 'curso não encontrada' }, { status: 404 });
   }
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
   try {
-    await prisma.curso.delete({
-      where: { ID_curso: id },
-    })
-    return NextResponse.json({ message: 'Curso deletado com sucesso' }, { status: 200 })
-  } catch (error) {
-    console.error ('Erro ao deletar curso: ', error)
-    return NextResponse.json({ error: 'Erro ao deletar curso' }, { status: 500 })
+    await prisma.curso.delete({ where: { id: Number(params.id) } });
+    return NextResponse.json({}, { status: 204 });
+  } catch {
+    return NextResponse.json({ error: 'curso não encontrada' }, { status: 404 });
   }
 }

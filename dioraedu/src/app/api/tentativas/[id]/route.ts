@@ -1,34 +1,27 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/authMiddleware';
 
-// PUT /api/tentativas/[id]
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-  const body = await req.json()
-
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const tentativaAtualizada = await prisma.tentativa.update({
-      where: { ID_tentativa: id },
-      data: body,
-    })
-    return NextResponse.json(tentativaAtualizada)
-  } catch (error) {
-    console.error('Erro ao atualizar tentativa:', error)
-    return NextResponse.json({ error: 'Erro ao atualizar tentativa.' }, { status: 500 })
+    const atualizado = await prisma.tentativa.update({
+      where: { id: Number(params.id) },
+      data,
+    });
+    return NextResponse.json(atualizado);
+  } catch {
+    return NextResponse.json({ error: 'tentativa não encontrada' }, { status: 404 });
   }
 }
 
-// DELETE /api/tentativas/[id]
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const id = Number(params.id)
-
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
   try {
-    await prisma.tentativa.delete({
-      where: { ID_tentativa: id },
-    })
-    return NextResponse.json({ message: 'tentativa excluída com sucesso.' })
-  } catch (error) {
-    console.error('Erro ao excluir tentativa:', error)
-    return NextResponse.json({ error: 'Erro ao excluir tentativa.' }, { status: 500 })
+    await prisma.tentativa.delete({ where: { id: Number(params.id) } });
+    return NextResponse.json({}, { status: 204 });
+  } catch {
+    return NextResponse.json({ error: 'tentativa não encontrada' }, { status: 404 });
   }
 }

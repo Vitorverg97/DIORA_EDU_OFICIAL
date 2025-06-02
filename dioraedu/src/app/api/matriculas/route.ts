@@ -1,34 +1,20 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
-import { z } from 'zod'
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
+import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 
-const matriculaSchema = z.object({
-  ID_usuario: z.number().int().positive(),
-  ID_curso: z.number().int().positive(),
-  data_matricula: z.string().refine(d => !isNaN(Date.parse(d)), { message: 'Data inválida' }),
-})
-
-export async function GET() {
-  try {
-    const lista = await prisma.matricula.findMany()
-    return NextResponse.json(lista)
-  } catch (err) {
-    console.error('Erro ao buscar matrículas:', err)
-    return NextResponse.json({ error: 'Erro ao buscar matrículas' }, { status: 500 })
-  }
+export async function GET(req: NextRequest) {
+  await authenticate(req); // lança erro 401 se não autenticado
+  const matriculas = await prisma.matricula.findMany();
+  return NextResponse.json(matriculas);
 }
 
-export async function POST(req: Request) {
-  const body = await req.json()
-  const parsed = matriculaSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({ error: 'Dados inválidos', issues: parsed.error.errors }, { status: 400 })
-  }
+export async function POST(req: NextRequest) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const mat = await prisma.matricula.create({ data: parsed.data })
-    return NextResponse.json(mat, { status: 201 })
-  } catch (err) {
-    console.error('Erro ao criar matrícula:', err)
-    return NextResponse.json({ error: 'Erro ao criar matrícula' }, { status: 500 })
+    const nova = await prisma.matricula.create({ data });
+    return NextResponse.json(nova, { status: 201 });
+  } catch (e) {
+    return NextResponse.json({ error: 'Erro ao criar matricula', details: e }, { status: 400 });
   }
 }

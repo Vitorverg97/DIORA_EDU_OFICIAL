@@ -1,7 +1,7 @@
 // pages/api/usuarios/perfil.ts
 
 import type { NextApiResponse } from 'next'
-import { authMiddleware, AuthenticatedRequest } from '@/middleware/authMiddleware'
+import  authMiddleware, AuthenticatedRequest from '@/lib/authMiddleware'
 
 const handler = async (req: AuthenticatedRequest, res: NextApiResponse) => {
   const usuario = req.usuario

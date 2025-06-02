@@ -4,17 +4,17 @@ import { authenticate } from '@/lib/authMiddleware'; // middleware de autentica�
 
 export async function GET(req: NextRequest) {
   await authenticate(req); // lança erro 401 se não autenticado
-  const cursos = await prisma.curso.findMany();
-  return NextResponse.json(cursos);
+  const mensagens = await prisma.mensagem.findMany();
+  return NextResponse.json(mensagens);
 }
 
 export async function POST(req: NextRequest) {
   await authenticate(req);
   const data = await req.json();
   try {
-    const nova = await prisma.curso.create({ data });
+    const nova = await prisma.mensagem.create({ data });
     return NextResponse.json(nova, { status: 201 });
   } catch (e) {
-    return NextResponse.json({ error: 'Erro ao criar curso', details: e }, { status: 400 });
+    return NextResponse.json({ error: 'Erro ao criar mensagem', details: e }, { status: 400 });
   }
 }
