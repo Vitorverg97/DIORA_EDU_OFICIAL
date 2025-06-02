@@ -1,31 +1,27 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/authMiddleware';
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const usuario = await prisma.usuario.findUnique({ where: { id: parseInt(params.id) } });
-    if (!usuario) return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
-    return NextResponse.json(usuario);
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao buscar usuário' }, { status: 500 });
+    const atualizado = await prisma.usuario.update({
+      where: { id: Number(params.id) },
+      data,
+    });
+    return NextResponse.json(atualizado);
+  } catch {
+    return NextResponse.json({ error: 'usuario não encontrado' }, { status: 404 });
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
   try {
-    const data = await req.json();
-    const usuario = await prisma.usuario.update({ where: { id: parseInt(params.id) }, data });
-    return NextResponse.json(usuario);
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao atualizar usuário' }, { status: 500 });
-  }
-}
-
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  try {
-    await prisma.usuario.delete({ where: { id: parseInt(params.id) } });
-    return NextResponse.json({ message: 'Usuário removido com sucesso' });
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao remover usuário' }, { status: 500 });
+    await prisma.usuario.delete({ where: { id: Number(params.id) } });
+    return NextResponse.json({}, { status: 204 });
+  } catch {
+    return NextResponse.json({ error: 'usuario não encontrado' }, { status: 404 });
   }
 }

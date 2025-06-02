@@ -1,23 +1,20 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
+import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 
-export async function GET() {
-  try {
-    const conteudos = await prisma.conteudo.findMany();
-    return NextResponse.json(conteudos);
-  } catch (error) {
-    console.error('Erro ao buscar conteúdos:', error);
-    return NextResponse.json({ error: 'Erro ao buscar conteúdos' }, { status: 500 });
-  }
+export async function GET(req: NextRequest) {
+  await authenticate(req); // lança erro 401 se não autenticado
+  const conteudos = await prisma.conteudo.findMany();
+  return NextResponse.json(conteudos);
 }
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const data = await request.json();
-    const novoConteudo = await prisma.conteudo.create({ data });
-    return NextResponse.json(novoConteudo, { status: 201 });
-  } catch (error) {
-    console.error('Erro ao criar conteúdo:', error);
-    return NextResponse.json({ error: 'Erro ao criar conteúdo' }, { status: 500 });
+    const nova = await prisma.conteudo.create({ data });
+    return NextResponse.json(nova, { status: 201 });
+  } catch (e) {
+    return NextResponse.json({ error: 'Erro ao criar conteudo', details: e }, { status: 400 });
   }
 }

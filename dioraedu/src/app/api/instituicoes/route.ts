@@ -1,23 +1,20 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
+import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 
-export async function GET() {
-  try {
-    const instituicoes = await prisma.instituicao.findMany();
-    return NextResponse.json(instituicoes);
-  } catch (error) {
-    console.error('Erro ao buscar instituições:', error);
-    return NextResponse.json({ error: 'Erro ao buscar instituições' }, { status: 500 });
-  }
+export async function GET(req: NextRequest) {
+  await authenticate(req); // lança erro 401 se não autenticado
+  const instituicoes = await prisma.instituicao.findMany();
+  return NextResponse.json(instituicoes);
 }
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const data = await request.json();
-    const novaInstituicao = await prisma.instituicao.create({ data });
-    return NextResponse.json(novaInstituicao, { status: 201 });
-  } catch (error) {
-    console.error('Erro ao criar instituição:', error);
-    return NextResponse.json({ error: 'Erro ao criar instituição' }, { status: 500 });
+    const nova = await prisma.instituicao.create({ data });
+    return NextResponse.json(nova, { status: 201 });
+  } catch (e) {
+    return NextResponse.json({ error: 'Erro ao criar instituicao', details: e }, { status: 400 });
   }
 }

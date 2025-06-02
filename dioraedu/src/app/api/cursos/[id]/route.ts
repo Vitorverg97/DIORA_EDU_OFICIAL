@@ -1,31 +1,27 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/authMiddleware';
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const curso = await prisma.curso.findUnique({ where: { id: parseInt(params.id) } });
-    if (!curso) return NextResponse.json({ error: 'Curso não encontrado' }, { status: 404 });
-    return NextResponse.json(curso);
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao buscar curso' }, { status: 500 });
+    const atualizado = await prisma.curso.update({
+      where: { id: Number(params.id) },
+      data,
+    });
+    return NextResponse.json(atualizado);
+  } catch {
+    return NextResponse.json({ error: 'curso não encontrada' }, { status: 404 });
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
   try {
-    const data = await req.json();
-    const curso = await prisma.curso.update({ where: { id: parseInt(params.id) }, data });
-    return NextResponse.json(curso);
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao atualizar curso' }, { status: 500 });
-  }
-}
-
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  try {
-    await prisma.curso.delete({ where: { id: parseInt(params.id) } });
-    return NextResponse.json({ message: 'Curso removido com sucesso' });
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao remover curso' }, { status: 500 });
+    await prisma.curso.delete({ where: { id: Number(params.id) } });
+    return NextResponse.json({}, { status: 204 });
+  } catch {
+    return NextResponse.json({ error: 'curso não encontrada' }, { status: 404 });
   }
 }

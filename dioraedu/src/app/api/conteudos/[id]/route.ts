@@ -1,31 +1,27 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import  prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/authMiddleware';
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
+  const data = await req.json();
   try {
-    const conteudo = await prisma.conteudo.findUnique({ where: { id: parseInt(params.id) } });
-    if (!conteudo) return NextResponse.json({ error: 'Conteúdo não encontrado' }, { status: 404 });
-    return NextResponse.json(conteudo);
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao buscar conteúdo' }, { status: 500 });
+    const atualizado = await prisma.conteudo.update({
+      where: { id: Number(params.id) },
+      data,
+    });
+    return NextResponse.json(atualizado);
+  } catch {
+    return NextResponse.json({ error: 'conteudo não encontrada' }, { status: 404 });
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  await authenticate(req);
   try {
-    const data = await req.json();
-    const conteudo = await prisma.conteudo.update({ where: { id: parseInt(params.id) }, data });
-    return NextResponse.json(conteudo);
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao atualizar conteúdo' }, { status: 500 });
-  }
-}
-
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  try {
-    await prisma.conteudo.delete({ where: { id: parseInt(params.id) } });
-    return NextResponse.json({ message: 'Conteúdo removido com sucesso' });
-  } catch (error) {
-    return NextResponse.json({ error: 'Erro ao remover conteúdo' }, { status: 500 });
+    await prisma.conteudo.delete({ where: { id: Number(params.id) } });
+    return NextResponse.json({}, { status: 204 });
+  } catch {
+    return NextResponse.json({ error: 'conteudo não encontrada' }, { status: 404 });
   }
 }
