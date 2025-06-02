@@ -7,6 +7,7 @@ export async function authenticate(req: NextRequest) {
   const token = auth.split(' ')[1];
   try {
     jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    return null
   } catch {
     throw new NextResponse('Token inválido', { status: 401 });
   }

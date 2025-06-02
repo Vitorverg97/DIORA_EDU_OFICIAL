@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
 import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 
-export async function GET(req: NextRequest) {
-  await authenticate(req); // lança erro 401 se não autenticado
-  const atividades = await prisma.atividade.findMany();
-  return NextResponse.json(atividades);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(req: Request) {
+  try {
+    const data = await prisma.atividade.findMany()
+    return NextResponse.json(data)
+  } catch (error) {
+    console.error("Erro no GET:", error)
+    return new NextResponse("Erro interno no servidor", { status: 500 })
+  }
 }
 
 export async function POST(req: NextRequest) {
