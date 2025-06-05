@@ -14,11 +14,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "E-mail já cadastrado" }, { status: 400 });
   }
 
-  const senha_hash = await bcrypt.hash(senha, 10);
+  const senhaHash = await bcrypt.hash(senha, 10);
 
   const usuario = await prisma.usuario.create({
-    data: { nome, email, senha_hash, tipo: tipo || "aluno" },
+    data: { nome, email, senhaHash, perfil: tipo || "aluno" },
   });
 
-  return NextResponse.json({ ok: true, usuario: { id: usuario.id, email: usuario.email, nome: usuario.nome, tipo: usuario.tipo }}, { status: 201 });
+  return NextResponse.json({ ok: true, usuario: { id: usuario.id, email: usuario.email, nome: usuario.nome, tipo: usuario.perfil }}, { status: 201 });
 }

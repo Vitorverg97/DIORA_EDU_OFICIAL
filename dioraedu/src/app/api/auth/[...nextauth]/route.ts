@@ -28,7 +28,7 @@ const handler = NextAuth({
           id: user.id,
           email: user.email,
           nome: user.nome,
-          tipo: user.tipo,
+          tipo: user.perfil,
         };
       },
     }),
