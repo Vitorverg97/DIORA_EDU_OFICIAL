@@ -1,16 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaMicrosoft } from "react-icons/fa";
 import Image from 'next/image';
 
 export default function Cadastro() {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [tipoUsuario, setTipoUsuario] = useState('aluno');
+  const [erro, setErro] = useState("");
+  const router = useRouter();
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, email, senha }),
+    });
+
+    if (res.ok) {
+      router.push("/pages/login");
+    } else {
+      const { error } = await res.json();
+      setErro(error || "Erro ao registrar");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col justify-between">
@@ -31,7 +50,7 @@ export default function Cadastro() {
 
         {/* Formulário */}
         <div className="flex flex-col items-center gap-3 w-80">
-
+              <form onSubmit={handleSubmit} className="max-w-sm mt-10">
           {/* Select movido para cima */}
           <select
             className="px-4 py-2 text-black rounded w-full outline-none bg-[#BDE3FA]"
@@ -40,43 +59,41 @@ export default function Cadastro() {
           >
             <option value="aluno">Sou Aluno</option>
             <option value="professor">Sou Professor</option>
+            <option value="admin">Sou Administrador</option>
           </select>
 
           <input
-            type="text"
+            type="nome"
             placeholder="Nome completo"
-            className="px-4 py-2 text-black rounded w-full outline-none"
+            className="px-4 py-2 text-black rounded w-full outline-none input mt-2" required
             value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            onChange={e => setNome(e.target.value)}
           />
           <input
-            type="text"
-            placeholder="Email ou nome de usuário"
-            className="px-4 py-2 text-black rounded w-full outline-none"
+            type="email"
+            placeholder="E-mail"
+            className="px-4 py-2 text-black rounded w-full outline-none input mt-2" required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
           />
           <input
             type="password"
             placeholder="Senha"
-            className="px-4 py-2 text-black rounded w-full outline-none"
+            className="px-4 py-2 text-black rounded w-full outline-none input mt-2" required
             value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            onChange={e => setSenha(e.target.value)}
           />
           <input
             type="password"
             placeholder="Confirmar senha"
-            className="px-4 py-2 text-black rounded w-full outline-none"
+            className="px-4 py-2 text-black rounded w-full outline-none input mt-2" required
             value={confirmarSenha}
-            onChange={(e) => setConfirmarSenha(e.target.value)}
+            onChange={e => setConfirmarSenha(e.target.value)}
           />
-
+      {erro && <div className="text-red-500 mt-2">{erro}</div>}
           <button
-            onClick={() => {
-              alert(`Cadastro concluído como ${tipoUsuario}!\nVerifique sua caixa de entrada para confirmar seu e-mail.`);
-              window.location.href = "/pages/home-aluno";
-            }}
-            className="bg-[#4A4A4A] text-white px-6 py-2 rounded w-full hover:opacity-90"
+            type="submit"
+            className="btn bg-[#4A4A4A] text-white px-6 py-2 rounded w-full hover:opacity-90 mt-4"
           >
             Cadastrar
           </button>
@@ -88,13 +105,12 @@ export default function Cadastro() {
             >
               Já tem uma conta? Entrar
             </button>
-
-            <div className="flex items-center justify-center w-full text-black">
-              <div className="border-t border-black flex-grow mr-2"></div>
-              <span className="text-sm">ou</span>
-              <div className="border-t border-black flex-grow ml-2"></div>
+                                    
             </div>
-          </div>
+          </form>
+            <div className="flex-grow mr-2"></div>
+            <span className="text-black">ou</span>
+            <div className="flex-grow ml-2"></div>
 
           {/* Login social */}
           <button className="flex items-center text-black justify-center gap-3 border px-4 py-2 rounded w-full bg-white hover:bg-gray-100">
@@ -109,6 +125,7 @@ export default function Cadastro() {
             <FaMicrosoft className="text-blue-800 text-xl" />
             Continuar com a conta Microsoft
           </button>
+          
         </div>
       </div>
 
