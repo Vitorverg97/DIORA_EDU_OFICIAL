@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
-import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(req: NextRequest) {
   try {
-    await authenticate(req); // lança 401 se token inválido ou ausente
-
     const data = await prisma.atividade.findMany();
     return NextResponse.json(data);
   
@@ -21,7 +20,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  await authenticate(req);
+  
   const data = await req.json();
   try {
     const nova = await prisma.atividade.create({ data });

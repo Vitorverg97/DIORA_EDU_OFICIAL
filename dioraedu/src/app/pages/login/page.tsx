@@ -1,13 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { /*useEffect,*/ useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaMicrosoft } from "react-icons/fa";
 import Image from 'next/image';
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+//import { useSession } from "next-auth/react";
 
 export default function Login() {
+  //const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState("");
@@ -23,10 +25,20 @@ export default function Login() {
 
     if (res?.error) {
       setErro("E-mail ou senha inválidos");
-    } else {
-      router.push("/dashboard");
     }
+
   }
+/*
+  useEffect(() => {
+    if (session?.user?.tipo === "aluno") {
+      router.push("/pages/home-aluno");
+    } else if (session?.user?.tipo === "professor") {
+      router.push("/pages/home-professor");
+    } else if (session?.user?.tipo === "admin") {
+      router.push("/pages/home-admin");
+    }
+
+} , [session, router]);*/
 
   return (
         <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col justify-between">

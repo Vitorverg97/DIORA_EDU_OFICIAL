@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/*
 import { NextRequest } from 'next/server';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
@@ -28,3 +29,4 @@ export async function authenticate(req: NextRequest): Promise<JwtPayload | strin
     throw error;
   }
 }
+*/
