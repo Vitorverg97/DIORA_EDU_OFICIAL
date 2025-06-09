@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu prismaClient
-import { authenticate } from '@/lib/authMiddleware'; // middleware de autenticação JWT
 import bcrypt from 'bcryptjs';
 
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(req: NextRequest) {
-  await authenticate(req); // lança erro 401 se não autenticado
+  
   const usuarios = await prisma.usuario.findMany();
   return NextResponse.json(usuarios);
 }

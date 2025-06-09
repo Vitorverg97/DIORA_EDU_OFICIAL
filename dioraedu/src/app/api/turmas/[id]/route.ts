@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import  prisma from '@/lib/prisma';
-import { authenticate } from '@/lib/authMiddleware';
+//import { authenticate } from '@/lib/authMiddleware';
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-  await authenticate(req);
+  //await authenticate(req);
   const data = await req.json();
   try {
     const atualizado = await prisma.turma.update({
@@ -12,16 +12,28 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     });
     return NextResponse.json(atualizado);
   } catch {
-    return NextResponse.json({ error: 'turma não encontrada' }, { status: 404 });
+    return NextResponse.json({ error: 'instituição não encontrada' }, { status: 404 });
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  await authenticate(req);
+export async function DELETE(req: NextRequest, context: { params: { id: string } }  
+) {
+  const id = Number(context.params.id);
+  
+  if (isNaN(id)){
+    return new Response("ID inválido", { status: 400 });
+  }
+//  await authenticate(req);
   try {
-    await prisma.turma.delete({ where: { id: Number(params.id) } });
-    return NextResponse.json({}, { status: 204 });
-  } catch {
-    return NextResponse.json({ error: 'turma não encontrada' }, { status: 404 });
+    await prisma.turma.delete({ where: { id } 
+    });
+    return new NextResponse(null, { status: 204 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any){
+    if (error.code === "P2025") {
+      return NextResponse.json({ error: 'turma não encontrada' }, { status: 404 });
+    }
+    
+    return NextResponse.json({ error: "Erro interno ao deletar"}, {status: 500});
   }
 }
