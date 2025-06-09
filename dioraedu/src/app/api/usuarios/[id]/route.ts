@@ -16,12 +16,24 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: { params: { id: string } }  
+) {
+  const id = Number(context.params.id);
+  
+  if (isNaN(id)){
+    return new Response("ID inválido", { status: 400 });
+  }
 //  await authenticate(req);
   try {
-    await prisma.usuario.delete({ where: { id: Number(params.id) } });
-    return NextResponse.json({}, { status: 204 });
-  } catch {
-    return NextResponse.json({ error: 'usuario não encontrado' }, { status: 404 });
+    await prisma.usuario.delete({ where: { id } 
+    });
+    return new NextResponse(null, { status: 204 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any){
+    if (error.code === "P2025") {
+      return NextResponse.json({ error: 'usuario não encontrado' }, { status: 404 });
+    }
+    
+    return NextResponse.json({ error: "Erro interno ao deletar"}, {status: 500});
   }
 }
