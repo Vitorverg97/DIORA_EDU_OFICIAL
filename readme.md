@@ -1,89 +1,101 @@
-# DioraEDU
+# READ-ME-DIORA
 
-> Plataforma educacional gamificada para reforço de Português e Matemática, inspirada em Duolingo, Google Classroom e Microsoft Teams.
+# DioraEdu
 
-## 🚀 Objetivo
+DioraEdu é um projeto voltado para a área de educação, com o objetivo de facilitar e aprimorar processos educacionais por meio de uma plataforma inovadora e acessível. Embora não utilize inteligência artificial no momento, o DioraEdu foca em oferecer soluções práticas para alunos, professores e instituições.
 
-Desenvolver uma aplicação educacional que torne o aprendizado mais interativo e eficiente, focando inicialmente no ensino de Português e Matemática para alunos da educação básica.
+## Visão Geral
 
-## 📦 Tecnologias Utilizadas
+O projeto DioraEdu busca:
 
-### FrameWork
-- Next.js / React
-- Tailwind CSS
+- Centralizar ferramentas úteis para o aprendizado e ensino.
+- Proporcionar uma interface intuitiva para os usuários.
+- Oferecer uma base sólida para expansão futura, permitindo integrações adicionais.
 
-### Outros
-- Git + GitHub
-- VS Code
+## Funcionalidades Principais
 
-## 📁 Estrutura de Pastas
+- Gerenciamento de turmas e alunos.
+- Organização de conteúdos educacionais.
+- Comunicação eficiente entre professores e alunos.
 
-```markdown
-/dioraedu
-├── /node_modules
-├── /public
-│   └── /assets              # Imagens, ícones, etc.
-├── /src
-│   ├── /app (ou /pages)     # Rotas da aplicação (usar /pages se não usar App Router)
-│   │   ├── /api
-│   │   │   ├── /auth        # Login, logout, registro
-│   │   │   ├── /usuarios    # CRUD de usuários
-│   │   │   ├── /cursos      # CRUD de cursos
-│   │   │   ├── /conteudos   # CRUD de conteúdos
-│   │   │   ├── /atividades  # CRUD de atividades
-│   │   │   ├── /matriculas  # Matrículas de alunos
-│   │   │   └── /feedbacks   # Envio e leitura de feedbacks
-│   │   ├── /login           # Tela de login
-│   │   ├── /dashboard       # Redireciona para a home do aluno, prof ou admin
-│   │   ├── /cursos          # Listagem geral dos cursos
-│   │   ├── /cursos/[id]     # Detalhes de curso (com conteúdos)
-│   │   ├── /conteudos/[id]  # Visualização de conteúdo (e tentativas/feedback)
-│   │   └── index.tsx        # Página inicial
-│   ├── /components
-│   │   ├── Layout.tsx       # Layout base (navbar, footer, etc.)
-│   │   ├── CursoCard.tsx    # Exibe um curso
-│   │   ├── ConteudoItem.tsx # Exibe conteúdo
-│   │   └── etc...
-│   ├── /lib
-│   │   ├── prisma.ts        # Instância compartilhada do Prisma Client
-│   │   └── auth.ts          # Funções de login/autenticação
-│   ├── /hooks               # Hooks customizados
-│   ├── /styles              # CSS/Tailwind ou arquivos SCSS
-│   └── /utils               # Funções utilitárias (validações, formatações, etc.)
-├── .env                     # Variáveis de ambiente (banco de dados, JWT, etc.)
-├── prisma
-│   └── schema.prisma        # Modelos do banco (equivale ao SQL)
-├── tsconfig.json
-├── package.json
-└── README.md
+## Requisitos
 
-````
+- **Backend:** Java (com suporte a frameworks como Spring).
+- **Banco de Dados:** MySQL.
+- **Interface:** Java Swing para aplicações desktop.
+- **Ambiente:** JDK 17 ou superior, Maven para gerenciamento de dependências.
 
+## Instruções de Restauração do Ambiente
 
-## 🧑‍💻 Equipe
-- **Vítor Vieira** – Fullstack e Gestão
-- **Thalys Vinícius** – Frontend
-- **Giselly Luiza** – Backend e Gestão
-- **Danilo da Silva** – Frontend e Design
-- **Reginaldo José** – Documentação(a definir) e Testes
-- **Alisson Gustavo** – Design e Testes 
+1. **Clonando o Repositório**
 
-## 📌 Funcionalidades previstas
-- [x] Cadastro de usuários (alunos, professores)
-- [x] CRUD de conteúdo educativo
-- [ ] Sistema de gamificação (pontos, conquistas)
-- [ ] Relatórios de desempenho em PDF
-- [ ] Painel administrativo
+   ```bash
+   git clone https://github.com/seuusuario/DIORA_EDU_OFICIAL.git
+   cd dioraedu
+   ```
 
-## 🗂️ Como rodar o projeto localmente
+2. **Configurando o Banco de Dados**
 
-```bash
-git clone https://github.com/seu-usuario/DIORA_EDU_OFICIAL.git
-cd dioraedu/backend
-````
+   - Certifique-se de que o MySQL está instalado e rodando.
+   - Crie o banco de dados com o seguinte comando:
 
-## ✅ Licença
+     ```sql
+     CREATE DATABASE dioraedu;
+     ```
 
-Projeto acadêmico - Uso educacional apenas.
+   - Importe o arquivo de dump localizado em `db/dioraedu.sql`:
 
----
+     ```bash
+     mysql -u seu_usuario -p dioraedu < db/dioraedu.sql
+     ```
+
+3. **Configurando o Aplicativo**
+
+   - Atualize as configurações de conexão ao banco de dados no arquivo `src/main/resources/application.properties`:
+
+     ```properties
+     spring.datasource.url=jdbc:mysql://localhost:3306/dioraedu
+     spring.datasource.username=seu_usuario
+     spring.datasource.password=sua_senha
+     ```
+
+4. **Compilando e Executando**
+
+   - Compile e execute o projeto:
+
+     ```bash
+     mvn clean install
+     java -jar target/dioraedu-0.1.0.jar
+     ```
+
+## Como Usar
+
+1. **Login:**
+   - Insira suas credenciais fornecidas pela administração.
+
+2. **Gerenciamento de Turmas e Alunos:**
+   - Navegue até o menu principal e escolha a opção desejada.
+
+3. **Adição de Conteúdos:**
+   - Utilize a interface para adicionar, remover ou modificar conteúdos educacionais.
+
+4. **Comunicação:**
+   - Acesse a funcionalidade de mensagens para se conectar com outros usuários.
+
+## Futuras Melhorias
+
+- Implementação de recursos baseados em IA para personalização do aprendizado.
+- Versão web para maior acessibilidade.
+- Suporte para integrações com plataformas externas.
+
+## Contribuindo
+
+Contribuições são bem-vindas! Para contribuir:
+
+1. Faça um fork do projeto.
+2. Crie uma branch para sua funcionalidade ou correção: `git checkout -b minha-feature`.
+3. Envie um pull request explicando as mudanças.
+
+## Licença
+
+Este projeto é licenciado sob a [MIT License](LICENSE).
