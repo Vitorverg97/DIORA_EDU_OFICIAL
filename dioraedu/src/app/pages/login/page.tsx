@@ -6,13 +6,14 @@ import { FaFacebook, FaMicrosoft } from "react-icons/fa";
 import Image from 'next/image';
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import  prisma from '@/lib/prisma';
 //import { useSession } from "next-auth/react";
 
 export default function Login() {
   //const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState("");
+  const [erro, setErro] = useState(""); 
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -25,9 +26,20 @@ export default function Login() {
 
     if (res?.error) {
       setErro("E-mail ou senha inválidos");
+    } 
+    else if (res?.ok) {     
+      if (prisma.usuario.fields.perfil.name === "aluno"){
+         alert(prisma.usuario.fields.perfil.name)
+         router.push("/pages/home-aluno");
+      } 
+      if (prisma.usuario.fields.perfil.name === "professor") {
+         router.push("/pages/home-professor");
+      } 
+      if (prisma.usuario.fields.perfil.name === "admin") {
+         router.push("/pages/home-admin");
     }
-
   }
+}
 /*
   useEffect(() => {
     if (session?.user?.tipo === "aluno") {
@@ -143,3 +155,4 @@ export default function Login() {
     </div>
   );
 }
+
