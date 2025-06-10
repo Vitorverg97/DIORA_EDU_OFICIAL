@@ -6,6 +6,18 @@ import { FaHome, FaUserAlt, FaHeart } from "react-icons/fa"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import ConfigSidebar from "../../../components/ConfigSidebar" // ajuste o caminho se precisar
 
+/**
+ * Página de perfil do usuário
+ * 
+ * Exibe página de perfil do usuário com nome, estatístcicas de pontuação nas matérias de matemática e português e chat
+ * 
+ * @param {object} props
+ * @param {string} props.matematica - pontuação em matemática (ex: 79 pontos)
+ * @param {string} props.portugues - pontuação em português (ex: 100 pontos)
+ * @returns {JSX.Element} Página de perfil do usuário
+ */
+
+
 const Perfil: React.FC = () => {
   const [configAberta, setConfigAberta] = useState(false)
 
