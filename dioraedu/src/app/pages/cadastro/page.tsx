@@ -6,6 +6,14 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaMicrosoft } from "react-icons/fa";
 import Image from 'next/image';
 
+/**
+ * Componente de cadastro de usuário
+ * 
+ * Renderiza um formulário para inserir nome, email, senha e tipo do usuário
+ * 
+ * @component
+ * @returns {JSX.Element} Componente de cadastro
+ */
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -15,6 +23,14 @@ export default function Cadastro() {
   const [erro, setErro] = useState("");
   const router = useRouter();
 
+/**
+ * Lida com o envio do formulário do registro de cadastro
+ * 
+ * Faz uma requisição para a API de autenticação e trata erros ou redirecionamento
+ * 
+ * @param {React.FormEvent} e = Envio do formulário
+ * @returns{Promise<void>} Nada é retornado diretamente
+ */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const res = await fetch("/api/auth/register", {
@@ -30,6 +46,14 @@ export default function Cadastro() {
       setErro(error || "Erro ao registrar");
     }
   }
+
+/**
+ * Página de cadastro do usuário
+ * 
+ * Exibe o formulário de registro
+ * 
+ * @returns {JSX.Element} Página de cadastro
+ */
 
   return (
     <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col justify-between">

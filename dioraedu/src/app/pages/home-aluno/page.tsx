@@ -6,6 +6,14 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Link from "next/link";
 import ConfigSidebar from '../../../components/ConfigSidebar';
 
+/**
+ * Página Inicial do usuário
+ * 
+ * Exibe seções como o Header, Conteúdo principal com cards das matérias, Coluna de Chat, Menu de configurações e Menu inferior
+ * 
+ * @returns {JSX.Element} Página Home do aluno
+ */
+
 export default function Classes() {
   const [configAberta, setConfigAberta] = useState(false);
 
@@ -114,6 +122,19 @@ export default function Classes() {
     </div>
   );
 }
+
+/**
+ * 
+ * Componentes do card de disciplina
+ * 
+ * @param {Object} props
+ * @param {string} props.imagemTopo - caminho da imagem do topo
+ * @param {string} props.titulo - titulo da disciplina
+ * @param {string} props.professor - nome do professor
+ * @param {string} props.imagem - caminho da imagem principal
+ * @param {string} props.link - link de navegação
+ * @returns {JSX.Element} Card de disciplina
+ */
 
 // Componente para os cards de disciplina
 function DisciplinaCard({

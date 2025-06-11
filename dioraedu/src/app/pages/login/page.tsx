@@ -9,12 +9,28 @@ import { useRouter } from "next/navigation";
 import  prisma from '@/lib/prisma';
 //import { useSession } from "next-auth/react";
 
+/**
+ * Componente de login do usuário
+ * 
+ * Renderiza um formulário de login do usuário
+ * 
+ * @component
+ * @returns {JSX.Element} componentes de login
+ */
+
 export default function Login() {
   //const { data: session } = useSession();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState(""); 
   const router = useRouter();
+
+/**
+ * Lida com o envio do formulário de Login para o banco de dados
+ * 
+ * @param {React.FromEvent} e - checagem do formulário de acordo com os itens de cadastro
+ * @returns {Promise<void>} Nada é retornado diretamente
+ */
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,6 +67,14 @@ export default function Login() {
     }
 
 } , [session, router]);*/
+
+/**
+ * Página de login do usuário
+ * 
+ * Exibe formulário de login, juntamente com botões de continuar com outras aplicações
+ * 
+ * @returns {JSX.Element}
+ */
 
   return (
         <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col justify-between">

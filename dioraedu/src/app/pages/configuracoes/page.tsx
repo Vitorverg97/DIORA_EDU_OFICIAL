@@ -2,12 +2,28 @@
 
 import React, { useState } from 'react'
 
+/**
+ * Componente para alterar o tema da página para o modo escuro
+ * 
+ * Renderiza a página para o tema escolhido (Claro ou Escuro)
+ * 
+ * @returns 
+ */
+
 const Configuracoes: React.FC = () => {
   const [temaEscuro, setTemaEscuro] = useState(false)
 
   const toggleTema = () => {
     setTemaEscuro(!temaEscuro)
   }
+
+/**
+ * Página de Configurações do usuário
+ * 
+ * Exibe seções para alterar nome, senha, tema e como sair da conta
+ * 
+ * @returns {JSX.Element} Página de configurações
+ */
 
   return (
     <div className={`min-h-screen ${temaEscuro ? 'bg-[#1f2937] text-white' : 'bg-[#f0f0f0] text-black'} p-8 font-sans`}>
