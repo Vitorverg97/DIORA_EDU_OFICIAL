@@ -1,5 +1,3 @@
-# READ-ME-DIORA
-
 # DioraEdu
 
 DioraEdu é um projeto voltado para a área de educação, com o objetivo de facilitar e aprimorar processos educacionais por meio de uma plataforma inovadora e acessível. Embora não utilize inteligência artificial no momento, o DioraEdu foca em oferecer soluções práticas para alunos, professores e instituições.
@@ -43,12 +41,22 @@ O projeto DioraEdu busca:
      CREATE DATABASE dioraedu;
      ```
 
-   - Importe o arquivo de dump localizado em `db/dioraedu.sql`:
+   - Importe o arquivo de localizado em `scritp.sql`.
 
-     ```bash
-     mysql -u seu_usuario -p dioraedu < db/dioraedu.sql
-     ```
+  **siga as instruções:**
+  
+  - npx prisma db push
 
+- npx prisma generate
+
+**3. Criar o arquivo '.env' na pasta 'dioraedu';**
+
+**4. Inserir os seguintes dados na pasta:**
+
+- DATABASE_URL="mysql://root:sua_senha@localhost:3306/dioraedu"
+
+- JWT_SECRET="NikVergara_crazyK9"
+    
 3. **Configurando o Aplicativo**
 
    - Atualize as configurações de conexão ao banco de dados no arquivo `src/main/resources/application.properties`:
@@ -67,6 +75,11 @@ O projeto DioraEdu busca:
      mvn clean install
      java -jar target/dioraedu-0.1.0.jar
      ```
+**PARA EXCUTAR O PROJETO DIORAEDU:**
+
+1. Executar todos os comandos de 'script.sql';
+
+2. Executar na pasta principal do projeto:
 
 ## Como Usar
 
@@ -95,7 +108,3 @@ Contribuições são bem-vindas! Para contribuir:
 1. Faça um fork do projeto.
 2. Crie uma branch para sua funcionalidade ou correção: `git checkout -b minha-feature`.
 3. Envie um pull request explicando as mudanças.
-
-## Licença
-
-Este projeto é licenciado sob a [MIT License](LICENSE).
