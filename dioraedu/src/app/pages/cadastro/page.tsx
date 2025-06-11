@@ -19,7 +19,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [tipoUsuario, setTipoUsuario] = useState('aluno');
+  const [tipoUsuario, setTipoUsuario] = useState("aluno");
   const [erro, setErro] = useState("");
   const router = useRouter();
 
@@ -32,11 +32,11 @@ export default function Cadastro() {
  * @returns{Promise<void>} Nada é retornado diretamente
  */
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault();   
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, senha }),
+      body: JSON.stringify({ nome, email, senha, tipoUsuario }),
     });
 
     if (res.ok) {

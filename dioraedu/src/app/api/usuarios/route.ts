@@ -18,6 +18,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Dados obrigatórios' }, { status: 400 });
   }
 
+  // Verifica se o perfil é válido
+  const perfisPermitidos = ['aluno', 'professor', 'admin'];
+  if (!perfisPermitidos.includes(perfil)) {
+    return NextResponse.json({ message: 'Perfil inválido' }, { status: 400 });
+  }
+
   // Verifica se já existe usuário
   const existe = await prisma.usuario.findUnique({ where: { email } });
   if (existe) {
