@@ -19,7 +19,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [tipoUsuario, setTipoUsuario] = useState("aluno");
+  const [perfil, setPerfil] = useState("aluno");
   const [erro, setErro] = useState("");
   const router = useRouter();
 
@@ -32,11 +32,19 @@ export default function Cadastro() {
  * @returns{Promise<void>} Nada é retornado diretamente
  */
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();   
+    e.preventDefault();
+    
+    console.log('🚀 Enviando via fetch:', {
+  nome,
+  email,
+  senha,
+  perfil
+});
+
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, senha, tipoUsuario }),
+      body: JSON.stringify({ nome, email, senha, tipo:perfil }),
     });
 
     if (res.ok) {
@@ -45,6 +53,10 @@ export default function Cadastro() {
       const { error } = await res.json();
       setErro(error || "Erro ao registrar");
     }
+    if (senha !== confirmarSenha) {
+  setErro("As senhas não coincidem");
+  return;
+}
   }
 
 /**
@@ -78,8 +90,8 @@ export default function Cadastro() {
           {/* Select movido para cima */}
           <select
             className="px-4 py-2 text-black rounded w-full outline-none bg-[#BDE3FA]"
-            value={tipoUsuario}
-            onChange={(e) => setTipoUsuario(e.target.value)}
+            value={perfil}
+            onChange={(e) => setPerfil(e.target.value)}
           >
             <option value="aluno">Sou Aluno</option>
             <option value="professor">Sou Professor</option>

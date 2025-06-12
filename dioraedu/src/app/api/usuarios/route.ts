@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
   // await authenticate(req); // descomente se for necessário autenticar
 
   const { nome, email, senha, perfil } = await req.json();
+  console.log({ nome, email, perfil });
   if (!nome || !email || !senha || !perfil) {
     return NextResponse.json({ message: 'Dados obrigatórios' }, { status: 400 });
   }
