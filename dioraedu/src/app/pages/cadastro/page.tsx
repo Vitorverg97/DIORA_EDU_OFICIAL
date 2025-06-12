@@ -33,14 +33,23 @@ export default function Cadastro() {
  */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    
-    console.log('🚀 Enviando via fetch:', {
-  nome,
-  email,
-  senha,
-  perfil
-});
 
+    // Confirmar senha
+    if (senha !== confirmarSenha) {
+      setErro("As senhas não coincidem");
+      return;
+    }
+
+    // Validar senha
+    if (!senha || senha.length < 8) {
+      setErro("A senha deve conter pelo menos 8 caracteres.");
+      return;
+      }
+
+      // Resetar erro (caso validações passem)
+      setErro("");
+    
+    // Envia dados para a API
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -53,10 +62,6 @@ export default function Cadastro() {
       const { error } = await res.json();
       setErro(error || "Erro ao registrar");
     }
-    if (senha !== confirmarSenha) {
-  setErro("As senhas não coincidem");
-  return;
-}
   }
 
 /**

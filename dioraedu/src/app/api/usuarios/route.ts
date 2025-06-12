@@ -31,6 +31,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'E-mail já cadastrado' }, { status: 409 });
   }
 
+  // Validar senha
+  if (!senha || senha.length < 8) {
+    return NextResponse.json(
+      { erro: 'A senha deve conter pelo menos 8 caracteres.' },
+      { status: 400 }
+    );
+  }
+
   // Gera hash seguro da senha
   const senhaHash = await bcrypt.hash(senha, 10);
 
