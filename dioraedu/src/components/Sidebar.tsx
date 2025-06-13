@@ -4,6 +4,13 @@ import React from 'react'
 import { X } from 'lucide-react'
 import LancarAula from './LancarAula'
 
+/**
+ * Sidebar reutilizável
+ * 
+ * @param props - texto e botões pertencentes
+ */
+
+
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void

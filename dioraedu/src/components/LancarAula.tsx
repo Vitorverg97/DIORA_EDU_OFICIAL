@@ -3,6 +3,20 @@
 import React, { useState } from 'react'
 import { BsUpload, BsTrash } from 'react-icons/bs'
 
+/**
+ * Sessão de postar aula reutilizável
+ * 
+ * 
+ * @param props.texto - Texto a adicionar
+ * @param props.descricao - Descrição
+ * @param props.turma - Turma/Disciplina
+ * @param props.dataHora - Data e hora da aula
+ * @param props.linkExterno - Link externo (opcional)
+ * @param props.selecionarArquivos - Se pode selecionar arquivos
+ * @param props.onCancelar - Ação ao cancelar
+ * @param props.onPublicar - Ação ao publicar a aula
+ */
+
 const LancarAula: React.FC = () => {
   const [arquivos, setArquivos] = useState<File[]>([])
   const [obrigatoria, setObrigatoria] = useState(false)
