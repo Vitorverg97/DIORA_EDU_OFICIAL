@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
+  // 1) Defina seu provider de credenciais
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -42,9 +43,9 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         // Type assertion para aceitar os campos customizados
-        token.id = typeof user.id === "string" ? parseInt(user.id,10) : user.id;
-        token.nome = user.nome;
-        token.tipo = user.tipo;
+        token.id   = (user as any).id;
+        token.nome = (user as any).nome;
+        token.tipo = (user as any).tipo;
       }
       return token;
     },
@@ -59,6 +60,9 @@ const handler = NextAuth({
       return session;
     },
   },
-});
+};
+
+const handler = NextAuth(authOptions);
+
 
 export { handler as GET, handler as POST };

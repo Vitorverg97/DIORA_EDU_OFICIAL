@@ -1,12 +1,12 @@
 'use client'
 
-import { /*useEffect,*/ useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaMicrosoft } from "react-icons/fa";
 import Image from 'next/image';
-import { signIn } from "next-auth/react";
+import { signIn, useSession  } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import  prisma from '@/lib/prisma';
+//import  prisma from '@/lib/prisma';
 //import { useSession } from "next-auth/react";
 
 /**
@@ -23,6 +23,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState(""); 
+  const { data: session, status } = useSession()
   const router = useRouter();
 
 /**
@@ -43,19 +44,38 @@ export default function Login() {
     if (res?.error) {
       setErro("E-mail ou senha inválidos");
     } 
-    else if (res?.ok) {     
-      if (prisma.usuario.fields.perfil.name === "aluno"){
-         alert(prisma.usuario.fields.perfil.name)
-         router.push("/pages/home-aluno");
-      } 
-      if (prisma.usuario.fields.perfil.name === "professor") {
-         router.push("/pages/home-professor");
-      } 
-      if (prisma.usuario.fields.perfil.name === "admin") {
-         router.push("/pages/home-admin");
-    }
-  }
+  //   else if (res?.ok) {     
+  //     if (prisma.usuario.fields.perfil.name === "aluno"){
+  //        alert(prisma.usuario.fields.perfil.name)
+  //        router.push("/pages/home-aluno");
+  //     } 
+  //   //   if (prisma.usuario.fields.perfil.name === "professor") {
+  //   //      router.push("/pages/home-professor");
+  //   //   } 
+  //   //   if (prisma.usuario.fields.perfil.name === "admin") {
+  //   //      router.push("/pages/home-admin");
+  //   // }
+  // }
 }
+
+  // whenever the session becomes available, redirect based on perfil
+  useEffect(() => {
+    if (status !== "authenticated") return
+    switch (session?.user?.tipo) {
+      case 'aluno':
+        router.push('/pages/home-aluno')
+        break
+      case 'professor':
+        router.push('/pages/home-professor')
+        break
+      case 'admin':
+        router.push('/pages/home-admin')
+        break
+    }
+  }, [status, session, router])
+
+
+
 /*
   useEffect(() => {
     if (session?.user?.tipo === "aluno") {
@@ -99,7 +119,6 @@ export default function Login() {
             placeholder="E-mail"
             type="email"
             className="px-4 py-2 rounded w-full outline-none input" required
-            
           />
           
           <input

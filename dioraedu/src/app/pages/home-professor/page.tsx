@@ -1,6 +1,6 @@
 'use client'
 
-import React, { JSX, useState } from 'react'
+import React, { useState } from 'react'
 import { FaHome, FaUserAlt, FaHeart } from "react-icons/fa"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import Link from "next/link"
