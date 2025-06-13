@@ -8,6 +8,14 @@ interface SidebarProps {
   onClose: () => void
 }
 
+/**
+ * Sidebar de configurações
+ * 
+ * Exibe side bar da página de configurações
+ * 
+ * @param props Texto e botões de alterar senha, notificação, ajuda e sair
+ */
+
 const SidebarConfiguracoes: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   return (
     <div

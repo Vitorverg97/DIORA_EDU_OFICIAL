@@ -2,6 +2,14 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+/**
+ * Página de apresentação do projeto DioraEdu
+ * 
+* Exibe página "Home" sobre o projeto, sessões sobre o projeto, seus benefícios, planos e entrar
+ * 
+ * @returns {JSX.Element} Página de introdução do projetoD
+ */
+
 const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#f7e0a1] text-[#4a4a4a] font-sans">
