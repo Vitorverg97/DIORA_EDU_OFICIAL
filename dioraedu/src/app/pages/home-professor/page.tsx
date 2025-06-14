@@ -28,11 +28,6 @@ export default function ProfessorHome() {
           <img src="/assets/icone-cerebro.svg" alt="Logo" className="h-8" />
           <h1 className="text-xl font-bold">DioraEdu</h1>
         </div>
-        <input
-          type="text"
-          placeholder="Buscar..."
-          className="rounded px-3 py-1 text-white w-1/3 bg-[#13426A]"
-        />
         <button onClick={() => setConfigAberta(true)}>
           <BsThreeDotsVertical className="text-xl cursor-pointer" />
         </button>

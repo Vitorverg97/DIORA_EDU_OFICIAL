@@ -66,6 +66,20 @@ model Professor {
   @@map("professores")
 }
 
+model Administrador {
+  id             Int         @id @default(autoincrement())
+  usuario        Usuario     @relation(fields: [usuarioId], references: [id])
+  usuarioId      Int         @unique
+  instituicao    Instituicao @relation(fields: [instituicaoId], references: [id])
+  instituicaoId  Int
+  ativo          Boolean     @default(true)
+  criadoEm       DateTime    @default(now())
+  atualizadoEm   DateTime    @updatedAt
+
+  @@map("administradores")
+}
+
+
 model Curso {
   id           Int       @id @default(autoincrement())
   nome         String    @db.VarChar(150)
