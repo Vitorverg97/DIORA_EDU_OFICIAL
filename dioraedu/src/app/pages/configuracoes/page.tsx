@@ -1,34 +1,22 @@
 "use client"
 
-import React, { useState } from 'react'
-
-/**
- * Componente para alterar o tema da página para o modo escuro
- * 
- * Renderiza a página para o tema escolhido (Claro ou Escuro)
- * 
- * @returns 
- */
+import { useRouter } from 'next/navigation';
 
 const Configuracoes: React.FC = () => {
-  const [temaEscuro, setTemaEscuro] = useState(false)
-
-  const toggleTema = () => {
-    setTemaEscuro(!temaEscuro)
-  }
+  const router = useRouter();
 
 /**
  * Página de Configurações do usuário
  * 
- * Exibe seções para alterar nome, senha, tema e como sair da conta
+ * Exibe seções para alterar nome e senha.
  * 
  * @returns {JSX.Element} Página de configurações
  */
 
   return (
-    <div className={`min-h-screen ${temaEscuro ? 'bg-[#1f2937] text-white' : 'bg-[#f0f0f0] text-black'} p-8 font-sans`}>
+    <div className="min-h-screen bg-[#f0f0f0] text-black p-8 font-sans">
       {/* Título */}
-      <h1 className="text-2xl font-bold mb-6">Configurações</h1>
+      <h1 className="text-2xl font-bold mb-6">Alterar nome e senha</h1>
 
       {/* Seção: Alterar nome */}
       <div className="mb-6">
@@ -50,24 +38,15 @@ const Configuracoes: React.FC = () => {
         />
       </div>
 
-      {/* Seção: Tema */}
-      <div className="mb-6 flex items-center justify-between">
-        <span className="font-semibold">Tema escuro</span>
+      <div className="mt-8 w-32 h-full bg-[#0A2E4B] text-white shadow-lg rounded">
         <button
-          onClick={toggleTema}
-          className={`px-4 py-2 rounded ${temaEscuro ? 'bg-yellow-400 text-black' : 'bg-[#0A2E4B] text-white'} transition-all`}
+        type='button'
+        className="w-full text-center hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer"
+        onClick={() => router.push("/pages/home-aluno")}
         >
-          {temaEscuro ? 'Desativar' : 'Ativar'}
-        </button>
+        Voltar
+          </button>
       </div>
-
-      {/* Botão: Sair */}
-      <button
-        onClick={() => window.location.href = '/'}
-        className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition-all"
-      >
-        Sair da conta
-      </button>
     </div>
   )
 }

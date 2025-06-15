@@ -18,8 +18,8 @@ export default function Classes() {
   const [configAberta, setConfigAberta] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col">
-      
+    <div className="bg-white text-black dark:bg-[#0A2E4B] dark:text-white">
+      <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col">
       {/* Barra de navegação superior */}
       <header className="bg-[#0A2E4B] text-white flex items-center justify-between px-6 py-3">
         <div className="flex items-center gap-2">
@@ -114,6 +114,7 @@ export default function Classes() {
 
       {/* Menu de configurações */}
       <ConfigSidebar isOpen={configAberta} onClose={() => setConfigAberta(false)} />
+    </div>
     </div>
   );
 }
