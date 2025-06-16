@@ -15,8 +15,6 @@ export const authOptions: NextAuthOptions = {
  * validar as credenciais fornecidas contra o banco de dados.
  */
 
-const handler = NextAuth({
-
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -64,9 +62,9 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         // Type assertion para aceitar os campos customizados
-        token.id   = (user as any).id;
-        token.nome = (user as any).nome;
-        token.tipo = (user as any).tipo;
+        token.id   = user.id as number;
+        token.nome = user.nome;
+        token.tipo = user.tipo;
       }
       return token;
     },

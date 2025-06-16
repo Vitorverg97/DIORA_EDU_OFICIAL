@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     const turmas = await prisma.turma.findMany({
       include: {
         curso: true,
-        professor: true,
+        professores: true,
         instituicao: true,
       },
     });
