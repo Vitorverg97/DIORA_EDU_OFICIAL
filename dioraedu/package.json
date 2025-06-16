@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docs": "typedoc --out docs src --entryPointStrategy expand"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
@@ -34,6 +35,14 @@
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4",
     "typedoc": "^0.28.5",
-    "typescript": "^5"
-  }
+    "typescript": "^5.8.3"
+  },
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "commonjs",
+    "target": "es6",
+    "strict": true,
+    "esModuleInterop": true
+    },
+  "include": ["src"]
 }

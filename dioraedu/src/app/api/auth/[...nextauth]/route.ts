@@ -3,6 +3,14 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+/**
+ * Configuração NextAuth para a autenticação de credenciais personalizadas
+ * 
+ * Este handler define um provedor de credenciais que permite aos usuários
+ * fazer login com email e senha. A função `authorize` é responsável por
+ * validar as credenciais fornecidas contra o banco de dados.
+ */
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -11,6 +19,15 @@ const handler = NextAuth({
         email: { label: "E-mail", type: "email" },
         senha: { label: "Senha", type: "password" },
       },
+
+/**
+ * Valida credenciais fornecidas (email e senha)
+ * 
+ * @param credentials - objeto que contém as credenciais do usuário (email e senha)
+ * @param credentials.email - Email do usuário
+ * @param credentials.senha - Senha do usuário
+ * @Returns Um objeto de usuário se a autentificação for bem sucedida, caso contrário retorna "null"
+ */
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.senha) return null;
 

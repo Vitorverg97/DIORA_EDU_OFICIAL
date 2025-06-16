@@ -4,6 +4,23 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 
+/**
+ * Autentificação do processo de Login
+ * 
+ * @returns status 200 para "login bem sucedido" em caso de sucesso
+ * @returns status 400 para "Dados inválidos"
+ * @returns 401 para "usuário não encontrado"
+ * @returns 401 para "Senha incorreta"
+ * @returns 405 para "Método não permitido"
+ * 
+ * @example
+ * POST/api/login
+ * 
+ * //Exemplo de resposta em caso de erro
+ * Status: 400
+ * Body: { message: "Dados inválidos" }
+ */
+
 const loginSchema = z.object({
   email: z.string().email(),
   senha: z.string().min(6),
