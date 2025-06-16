@@ -19,7 +19,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [tipoUsuario, setTipoUsuario] = useState('aluno');
+  const [perfil, setPerfil] = useState("aluno");
   const [erro, setErro] = useState("");
   const router = useRouter();
 
@@ -33,10 +33,27 @@ export default function Cadastro() {
  */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    // Confirmar senha
+    if (senha !== confirmarSenha) {
+      setErro("As senhas não coincidem");
+      return;
+    }
+
+    // Validar senha
+    if (!senha || senha.length < 8) {
+      setErro("A senha deve conter pelo menos 8 caracteres.");
+      return;
+      }
+
+      // Resetar erro (caso validações passem)
+      setErro("");
+    
+    // Envia dados para a API
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, senha }),
+      body: JSON.stringify({ nome, email, senha, tipo:perfil }),
     });
 
     if (res.ok) {
@@ -78,8 +95,8 @@ export default function Cadastro() {
           {/* Select movido para cima */}
           <select
             className="px-4 py-2 text-black rounded w-full outline-none bg-[#BDE3FA]"
-            value={tipoUsuario}
-            onChange={(e) => setTipoUsuario(e.target.value)}
+            value={perfil}
+            onChange={(e) => setPerfil(e.target.value)}
           >
             <option value="aluno">Sou Aluno</option>
             <option value="professor">Sou Professor</option>

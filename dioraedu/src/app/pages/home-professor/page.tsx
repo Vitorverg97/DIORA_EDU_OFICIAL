@@ -1,6 +1,6 @@
 'use client'
 
-import React, { JSX, useState } from 'react'
+import React, { useState } from 'react'
 import { FaHome, FaUserAlt, FaHeart } from "react-icons/fa"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import Link from "next/link"
@@ -28,11 +28,6 @@ export default function ProfessorHome() {
           <img src="/assets/icone-cerebro.svg" alt="Logo" className="h-8" />
           <h1 className="text-xl font-bold">DioraEdu</h1>
         </div>
-        <input
-          type="text"
-          placeholder="Buscar..."
-          className="rounded px-3 py-1 text-white w-1/3 bg-[#13426A]"
-        />
         <button onClick={() => setConfigAberta(true)}>
           <BsThreeDotsVertical className="text-xl cursor-pointer" />
         </button>

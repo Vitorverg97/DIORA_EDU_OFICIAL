@@ -18,19 +18,14 @@ export default function Classes() {
   const [configAberta, setConfigAberta] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col">
-      
+    <div className="bg-white text-black dark:bg-[#0A2E4B] dark:text-white">
+      <div className="min-h-screen bg-[#BDE3FA] text-black flex flex-col">
       {/* Barra de navegação superior */}
       <header className="bg-[#0A2E4B] text-white flex items-center justify-between px-6 py-3">
         <div className="flex items-center gap-2">
           <img src="/assets/icone-cerebro.svg" alt="Logo" className="h-8" />
           <h1 className="text-xl font-bold">DioraEdu</h1>
         </div>
-        <input
-          type="text"
-          placeholder="Buscar..."
-          className="rounded px-3 py-1 text-white w-1/3 bg-[#13426A]"
-        />
         <button onClick={() => setConfigAberta(true)}>
           <BsThreeDotsVertical className="text-xl cursor-pointer" />
         </button>
@@ -119,6 +114,7 @@ export default function Classes() {
 
       {/* Menu de configurações */}
       <ConfigSidebar isOpen={configAberta} onClose={() => setConfigAberta(false)} />
+    </div>
     </div>
   );
 }

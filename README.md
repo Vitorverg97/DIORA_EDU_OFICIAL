@@ -1,101 +1,141 @@
-# READ-ME-DIORA
+# DioraEDU
 
-# DioraEdu
+**DioraEDU** é uma plataforma educacional inovadora que busca facilitar e aprimorar os processos de ensino e aprendizagem, oferecendo ferramentas acessíveis para alunos, professores e instituições. O projeto foi idealizado como uma solução institucional com foco em usabilidade, integração e organização de conteúdos educacionais.
 
-DioraEdu é um projeto voltado para a área de educação, com o objetivo de facilitar e aprimorar processos educacionais por meio de uma plataforma inovadora e acessível. Embora não utilize inteligência artificial no momento, o DioraEdu foca em oferecer soluções práticas para alunos, professores e instituições.
+> Embora não utilize inteligência artificial neste momento, o projeto está estruturado para futuras expansões tecnológicas.
 
-## Visão Geral
+## 🚀 Visão Geral
 
-O projeto DioraEdu busca:
+O DioraEDU tem como objetivo:
 
-- Centralizar ferramentas úteis para o aprendizado e ensino.
-- Proporcionar uma interface intuitiva para os usuários.
-- Oferecer uma base sólida para expansão futura, permitindo integrações adicionais.
+* Centralizar recursos educacionais em uma única plataforma.
+* Proporcionar uma interface amigável e moderna para os usuários.
+* Oferecer uma base técnica sólida com possibilidade de crescimento e integração com novas tecnologias.
 
-## Funcionalidades Principais
+## 🧩 Funcionalidades Principais
 
-- Gerenciamento de turmas e alunos.
-- Organização de conteúdos educacionais.
-- Comunicação eficiente entre professores e alunos.
+* Cadastro e autenticação de usuários com base no tipo (aluno, professor, instituição).
+* Gerenciamento de cursos, turmas, conteúdos e atividades.
+* Acompanhamento de desempenho de alunos e feedback por professores.
+* Comunicação e organização interna entre os participantes da instituição.
 
-## Requisitos
+## 🛠️ Tecnologias Utilizadas
 
-- **Backend:** Java (com suporte a frameworks como Spring).
-- **Banco de Dados:** MySQL.
-- **Interface:** Java Swing para aplicações desktop.
-- **Ambiente:** JDK 17 ou superior, Maven para gerenciamento de dependências.
+* **Front-end:** [Next.js (App Router)](https://nextjs.org/) com TypeScript e TailwindCSS.
+* **Back-end:** [Node.js](https://nodejs.org/) com [Express.js](https://expressjs.com/) e [Prisma ORM](https://www.prisma.io/).
+* **Banco de Dados:** MySQL.
+* **ORM:** Prisma.
+* **Ambiente:** Node.js 18+, npm ou yarn.
 
-## Instruções de Restauração do Ambiente
+## 📦 Requisitos
 
-1. **Clonando o Repositório**
+* Node.js v18 ou superior
+* MySQL Server
+* Gerenciador de pacotes (npm ou yarn)
 
-   ```bash
-   git clone https://github.com/seuusuario/DIORA_EDU_OFICIAL.git
-   cd dioraedu
-   ```
+---
 
-2. **Configurando o Banco de Dados**
+## 🧑‍💻 Como Executar o Projeto
 
-   - Certifique-se de que o MySQL está instalado e rodando.
-   - Crie o banco de dados com o seguinte comando:
+### 1. Clone o Repositório
 
-     ```sql
-     CREATE DATABASE dioraedu;
-     ```
+```bash
+git clone https://github.com/Vitorverg97/DIORA_EDU_OFICIAL.git
+cd DIORA_EDU_OFICIAL
+```
 
-   - Importe o arquivo de dump localizado em `db/dioraedu.sql`:
+### 2. Instale as Dependências
 
-     ```bash
-     mysql -u seu_usuario -p dioraedu < db/dioraedu.sql
-     ```
+```bash
+npm install
+# ou
+yarn install
+```
 
-3. **Configurando o Aplicativo**
+### 3. Configure o Banco de Dados
 
-   - Atualize as configurações de conexão ao banco de dados no arquivo `src/main/resources/application.properties`:
+1. Inicie seu MySQL Server localmente.
+2. Crie o banco de dados:
 
-     ```properties
-     spring.datasource.url=jdbc:mysql://localhost:3306/dioraedu
-     spring.datasource.username=seu_usuario
-     spring.datasource.password=sua_senha
-     ```
+```sql
+CREATE DATABASE dioraedu;
+```
 
-4. **Compilando e Executando**
+3. Crie o arquivo `.env` na raiz do projeto e insira:
 
-   - Compile e execute o projeto:
+```env
+DATABASE_URL="mysql://root:sua_senha@localhost:3306/dioraedu"
+JWT_SECRET="NikVergara_crazyK9"
+```
 
-     ```bash
-     mvn clean install
-     java -jar target/dioraedu-0.1.0.jar
-     ```
+4. Rode as configurações do Prisma:
 
-## Como Usar
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+> **Observação:** O script SQL completo do projeto pode ser executado para popular tabelas iniciais. Ele está disponível na raiz do projeto como `script.sql`.
+
+### 4. Inicie o Servidor de Desenvolvimento
+
+```bash
+npm run dev
+# ou
+yarn dev
+```
+
+---
+
+## 🧪 Como Usar
 
 1. **Login:**
-   - Insira suas credenciais fornecidas pela administração.
 
-2. **Gerenciamento de Turmas e Alunos:**
-   - Navegue até o menu principal e escolha a opção desejada.
+   * Acesse `/login` e insira suas credenciais.
 
-3. **Adição de Conteúdos:**
-   - Utilize a interface para adicionar, remover ou modificar conteúdos educacionais.
+2. **Gerenciamento de Cursos, Turmas e Atividades:**
 
-4. **Comunicação:**
-   - Acesse a funcionalidade de mensagens para se conectar com outros usuários.
+   * Acesse a dashboard de acordo com o tipo de usuário logado (aluno, professor ou instituição).
 
-## Futuras Melhorias
+3. **Criação de Conteúdos:**
 
-- Implementação de recursos baseados em IA para personalização do aprendizado.
-- Versão web para maior acessibilidade.
-- Suporte para integrações com plataformas externas.
+   * Professores e instituições podem criar conteúdos, enviar links e arquivos.
 
-## Contribuindo
+4. **Resolução de Atividades:**
 
-Contribuições são bem-vindas! Para contribuir:
+   * Alunos podem responder atividades com múltiplas tentativas e receber feedbacks automáticos ou personalizados.
 
-1. Faça um fork do projeto.
-2. Crie uma branch para sua funcionalidade ou correção: `git checkout -b minha-feature`.
-3. Envie um pull request explicando as mudanças.
+5. **Acompanhamento de Rendimento:**
 
-## Licença
+   * Através de views específicas, professores acompanham o desempenho individual e coletivo dos alunos.
 
-Este projeto é licenciado sob a [MIT License](LICENSE).
+---
+
+## 🌱 Futuras Melhorias
+
+* Implementação de algoritmos de personalização por IA.
+* Integração com ferramentas externas como Google Classroom ou Microsoft Teams.
+* Sistema de recomendação de atividades por perfil de aluno.
+* Módulo de certificação e emissão de relatórios personalizados.
+
+---
+
+## 🤝 Contribuindo
+
+Contribuições são muito bem-vindas!
+
+1. Faça um fork do repositório.
+2. Crie uma nova branch:
+   `git checkout -b minha-feature`.
+3. Faça suas alterações.
+4. Envie um Pull Request explicando claramente suas mudanças.
+
+---
+
+## 📚 Referências
+
+* [Next.js App Router Documentation](https://nextjs.org/docs/app)
+* [Prisma ORM](https://www.prisma.io/docs)
+* [Express.js](https://expressjs.com/)
+* [MySQL Documentation](https://dev.mysql.com/doc/)
+

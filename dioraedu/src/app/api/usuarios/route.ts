@@ -39,14 +39,29 @@ export async function POST(req: NextRequest) {
   // await authenticate(req); // descomente se for necessário autenticar
 
   const { nome, email, senha, perfil } = await req.json();
+  console.log({ nome, email, perfil });
   if (!nome || !email || !senha || !perfil) {
     return NextResponse.json({ message: 'Dados obrigatórios' }, { status: 400 });
+  }
+
+  // Verifica se o perfil é válido
+  const perfisPermitidos = ['aluno', 'professor', 'admin'];
+  if (!perfisPermitidos.includes(perfil)) {
+    return NextResponse.json({ message: 'Perfil inválido' }, { status: 400 });
   }
 
   // Verifica se já existe usuário
   const existe = await prisma.usuario.findUnique({ where: { email } });
   if (existe) {
     return NextResponse.json({ message: 'E-mail já cadastrado' }, { status: 409 });
+  }
+
+  // Validar senha
+  if (!senha || senha.length < 8) {
+    return NextResponse.json(
+      { erro: 'A senha deve conter pelo menos 8 caracteres.' },
+      { status: 400 }
+    );
   }
 
   // Gera hash seguro da senha

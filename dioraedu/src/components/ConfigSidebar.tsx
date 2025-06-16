@@ -1,13 +1,14 @@
-'use client'
+"use client"
 
-import React from 'react'
-import { IoMdClose } from 'react-icons/io'
+import { IoMdClose } from 'react-icons/io';
+import { useRouter } from 'next/navigation';
+import {useTheme}  from '../context/ThemeContext';
 
 interface SidebarProps {
   isOpen: boolean
   onClose: () => void
 }
-
+ 
 /**
  * Sidebar de configurações
  * 
@@ -17,6 +18,28 @@ interface SidebarProps {
  */
 
 const SidebarConfiguracoes: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+
+/**
+ * Componente para alterar o tema da página para o modo escuro
+ * 
+ * Renderiza a página para o tema escolhido (Claro ou Escuro)
+ * 
+ * @returns 
+ */
+
+const { toggleTheme } = useTheme();
+
+/**
+ * Redirecionar para Configurações do usuário
+ * 
+ * Exibe seção para alterar nome e senha.
+ * 
+ * @returns {JSX.Element} Página de configurações
+ */
+
+  const router = useRouter();
+  
+  
   return (
     <div
       className={`fixed top-0 right-0 w-72 h-full bg-[#0A2E4B] text-white shadow-lg transform transition-transform duration-300 z-50 ${
@@ -30,13 +53,44 @@ const SidebarConfiguracoes: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </button>
       </div>
 
-      <ul className="p-4 space-y-4 text-sm">
-        <li className="hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer">🔐 Alterar senha</li>
-        <li className="hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer">🎨 Alterar tema</li>
-        <li className="hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer">🔔 Notificações</li>
-        <li className="hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer">📘 Ajuda</li>
-        <li className="hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer">🚪 Sair</li>
-      </ul>
+      <div className="p-4 space-y-4 text-sm">
+  <button 
+  type='button'
+  className="w-full text-left hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer"
+  onClick={() => router.push("/pages/configuracoes")}
+  >
+    🔐 Alterar senha
+  </button>
+  
+  <button 
+  type='button'
+  className={`w-full text-left hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer`}
+  onClick={toggleTheme}
+  >
+    🎨 Alterar tema
+  </button>
+  
+  <button 
+  type='button'
+  className="w-full text-left hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer">
+    🔔 Notificações
+  </button>
+  
+  <button 
+  type='button'
+  className="w-full text-left hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer">
+    📘 Ajuda
+  </button>
+  
+  <button 
+  type='button'
+  className="w-full text-left hover:bg-[#4A4A4A] hover:bg-opacity-10 p-2 rounded cursor-pointer"
+  onClick={() => router.push("/")}
+  >
+    🚪 Sair
+  </button>
+</div>
+
     </div>
   )
 }
