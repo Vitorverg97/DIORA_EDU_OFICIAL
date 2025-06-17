@@ -20,7 +20,9 @@ import  prisma from '@/lib/prisma'; // ajuste para a localização real do seu p
 export async function GET(req: NextRequest) {
   // await authenticate(req); // lança erro 401 se não autenticado
   const conteudos = await prisma.conteudo.findMany();
-  return NextResponse.json(conteudos);
+  return NextResponse.json({conteudos,
+    serverTime: new Date().toISOString()
+  });
 }
 
 /**
@@ -34,13 +36,35 @@ export async function GET(req: NextRequest) {
  * Body: { nome: "Novo conteúdo", descricao: "Descrição do conteúdo" }
  */
 
-export async function POST(req: NextRequest) {
- // await authenticate(req);
-  const data = await req.json();
+export async function POST(req: Request) {
+  const body = await req.json()
+  const { titulo, descricao, cursoId, tipo, urlArquivo } = body
+
+  // Validação rápida do tipo
+  const tiposPermitidos = [
+    'video', 'leitura', 'quiz', 'simulado', 'pdf', 'audio', 'desafio'
+  ]
+  if (!tiposPermitidos.includes(tipo)) {
+    return NextResponse.json({ error: 'Tipo de conteúdo inválido' }, { status: 400 })
+  }
+
   try {
-    const nova = await prisma.conteudo.create({ data });
-    return NextResponse.json(nova, { status: 201 });
-  } catch (e) {
-    return NextResponse.json({ error: 'Erro ao criar conteudo', details: e }, { status: 400 });
+    const novoConteudo = await prisma.conteudo.create({
+      data: {
+        titulo,
+        descricao,
+        cursoId: Number(cursoId),
+        tipo, // já validado
+        urlArquivo,
+        dataCriacao: new Date(),
+        ultimaAtualizacao: new Date()
+        // ordem e ativo usarão os valores padrão
+      }
+    })
+
+    return NextResponse.json(novoConteudo, { status: 201 })
+  } catch (error) {
+    console.error('Erro ao criar conteúdo:', error)
+    return NextResponse.json({ error: 'Erro ao criar conteúdo' }, { status: 500 })
   }
 }

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { FaHome, FaUserAlt, FaHeart } from "react-icons/fa"
 import { BsThreeDotsVertical } from "react-icons/bs"
 import Link from "next/link"
-import Sidebar from '../../../components/Sidebar'
+import Sidebar from '../../../components/SidebarAula'
 import ConfigSidebar from '../../../components/ConfigSidebar'
 
 /**
@@ -44,7 +44,7 @@ export default function ProfessorHome() {
               titulo="Matemática"
               professor="Prof. Helena Martins"
               imagem="/assets/prof1.png"
-              link="/pages/classes/matematica"
+              link="/pages/classes/matematica-prof"
             />
           </div>
 

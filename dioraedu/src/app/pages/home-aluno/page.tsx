@@ -42,7 +42,7 @@ export default function Classes() {
               titulo="Matemática"
               professor="Prof. Helena Martins"
               imagem="/assets/prof1.png"
-              link="/pages/classes/matematica"
+              link="/pages/classes/matematica-aluno"
             />
             <DisciplinaCard
               imagemTopo="/assets/topo-portugues.png"
@@ -50,20 +50,6 @@ export default function Classes() {
               professor="Prof. Ricardo Almeida"
               imagem="/assets/prof2.png"
               link="/pages/classes/portugues"
-            />
-            <DisciplinaCard
-              imagemTopo="/assets/topo-geografia.png"
-              titulo="Geografia"
-              professor="Prof. Cristiane Caiado"
-              imagem="/assets/prof3.png"
-              link="/pages/classes/geografia"
-            />
-            <DisciplinaCard
-              imagemTopo="/assets/topo-historia.png"
-              titulo="História"
-              professor="Prof. Ademir Silva"
-              imagem="/assets/prof4.png"
-              link="/pages/classes/Historia"
             />
           </div>
         </div>
