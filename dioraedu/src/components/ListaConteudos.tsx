@@ -22,11 +22,26 @@ const ListaConteudos: React.FC<ListaConteudosProps> = ({ onEditar, onDeletar }) 
 
   useEffect(() => {
     const fetchConteudos = async () => {
-      const res = await fetch('/api/conteudos');
-      const data = await res.json();
-      setConteudos(data);
-      setCarregando(false);
+      try {
+        const res = await fetch('/api/conteudos');
+        const data = await res.json();
+        console.log("Resposta da API:", data);
+
+        if (Array.isArray(data.conteudos)) {
+          setConteudos(data.conteudos);
+        } else {
+          console.error("Resposta inesperada da API:", data);
+          setConteudos([]);
+        }
+
+      } catch (error) {
+        console.error("Erro ao buscar conteúdos:", error);
+        setConteudos([]);
+      } finally {
+        setCarregando(false);
+      }
     };
+
     fetchConteudos();
   }, []);
 
